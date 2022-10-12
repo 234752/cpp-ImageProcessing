@@ -16,8 +16,7 @@ void adaptiveMedianFilter(CImg<unsigned char> &image)
             if(image.height() - y < Smax) Smax = image.height() - y;
             if(x < Smax) Smax = x;
             if(y < Smax) Smax = y;
-            Smax--;
-            int Sxy = 0;
+            int Sxy = 1;
 
 
             int result = 0;
@@ -28,9 +27,9 @@ void adaptiveMedianFilter(CImg<unsigned char> &image)
                 int zmed;
                 int zxy = image(x, y, 0);
 
-                std::vector<int> values;
+                std::vector<int> values = { 1, 2};
 
-                for(int xi = x-Sxy; xi < xi+Sxy; xi++)
+                for(int xi = x-Sxy; xi < x+Sxy; xi++)
                 {
                     for(int yi = y-Sxy; yi < y+Sxy; yi++)
                     {
@@ -42,34 +41,35 @@ void adaptiveMedianFilter(CImg<unsigned char> &image)
                 zmax = values.back();
                 zmed = values[values.size()/2];
 
-                //A
-                int A1 = zmed-zmin;
+                //A starts here
+                int A1 = zmed-zmin; //A1 - values
                 int A2 = zmed-zmax;
-                if(A1>0 && A2<0) //B
+                if(A1>0 && A2<0) //A2 true - go to B
                 {
-                    int B1 = zxy-zmin;
+                    //B starts here
+                    int B1 = zxy-zmin; //B1 - values
                     int B2 = zxy-zmax;
                     if(B1>0 && B2<0)
                     {
-                        result = zxy;
+                        result = zxy; //B2 - output
                         break;
                     }
                     else
                     {
-                        result = zmed;
+                        result = zmed; //B3 - output
                         break;
                     }
                 }
-                else
+                else //A2 false - go to A3
                 {
-                    Sxy++;
-                    if(Sxy <= Smax)
+                    Sxy++; //A3 increase window size
+                    if(Sxy <= Smax) //A4 true - do nothing and repeat loop
                     {
 
                     }
                     else
                     {
-                        result = zxy;
+                        result = zxy; //A5 - output
                         break;
                     }
                 }

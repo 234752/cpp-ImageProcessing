@@ -10,6 +10,7 @@ int main() {
 
     adaptiveMedianFilter(image);
 
-    image.save_bmp("..\\..\\img\\color_24bit\\out.bmp");
+    //image.save_bmp("..\\..\\img\\color_24bit\\out.bmp");
+    image.save_bmp("..\\..\\img\\gray_scale_noise_8bit\\uniform_dist\\out.bmp");
     return 0;
 }
