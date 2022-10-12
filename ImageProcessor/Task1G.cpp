@@ -49,3 +49,19 @@ void diagonalFlip(CImg<unsigned char> &image)
     }
     image = flippedImage;
 }
+
+void scale(CImg<unsigned char> &image, double scale)
+{
+    CImg<unsigned char> scaledImage(image.width()*scale, image.height()*scale, 1, 3, 0);
+
+    for (int x = 0; x < scaledImage.width(); x++)
+    {
+        for (int y = 0; y < scaledImage.height(); y++)
+        {
+            scaledImage(x, y, 0) = image(x/scale, y/scale, 0);
+            scaledImage(x, y, 1) = image(x/scale, y/scale, 1);
+            scaledImage(x, y, 2) = image(x/scale, y/scale, 2);
+        }
+    }
+    image = scaledImage;
+}
