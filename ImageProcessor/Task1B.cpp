@@ -6,8 +6,10 @@ void brightnessModification(CImg<unsigned char> &image, int brightness)
 {
     if(brightness >= 0)
     {
-        for (int x = 0; x < image.width(); x++) {
-            for (int y = 0; y < image.height(); y++) {
+        for (int x = 0; x < image.width(); x++)
+        {
+            for (int y = 0; y < image.height(); y++)
+            {
                 float valR = image(x, y, 0) + brightness;
                 float valG = image(x, y, 1) + brightness;
                 float valB = image(x, y, 2) + brightness;
@@ -25,8 +27,10 @@ void brightnessModification(CImg<unsigned char> &image, int brightness)
     }
     else
     {
-        for (int x = 0; x < image.width(); x++) {
-            for (int y = 0; y < image.height(); y++) {
+        for (int x = 0; x < image.width(); x++)
+        {
+            for (int y = 0; y < image.height(); y++)
+            {
                 float valR = image(x, y, 0) + brightness;
                 float valG = image(x, y, 1) + brightness;
                 float valB = image(x, y, 2) + brightness;
@@ -42,5 +46,17 @@ void brightnessModification(CImg<unsigned char> &image, int brightness)
             }
         }
     }
+}
 
+void negative(CImg<unsigned char> &image)
+{
+    for (int x = 0; x < image.width(); x++)
+    {
+        for (int y = 0; y < image.height(); y++)
+        {
+            image(x, y, 0) = 255 - image(x, y, 0);
+            image(x, y, 1) = 255 - image(x, y, 1);
+            image(x, y, 2) = 255 - image(x, y, 2);
+        }
+    }
 }
