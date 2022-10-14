@@ -6,7 +6,7 @@
 int main() {
     //cimg_library::CImg<unsigned char> image("..\\..\\img\\color_24bit\\lenac_small.bmp");
     //cimg_library::CImg<unsigned char> image("..\\..\\img\\gray_scale_8bit\\lena_small.bmp");
-    cimg_library::CImg<unsigned char> image("..\\..\\img\\color_noise_24bit\\uniform_dist\\lenac_uniform3_small.bmp");
+    cimg_library::CImg<unsigned char> image("..\\..\\img\\gray_scale_noise_8bit\\uniform_dist\\lena_uniform3_small.bmp");
 
     adaptiveMedianFilter(image);
 
