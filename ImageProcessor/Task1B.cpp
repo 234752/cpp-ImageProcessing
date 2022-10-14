@@ -48,6 +48,29 @@ void brightnessModification(CImg<unsigned char> &image, int brightness)
     }
 }
 
+void contrast(CImg<unsigned char> &image, int contrast)
+{
+    for (int x = 0; x < image.width(); x++) {
+        for (int y = 0; y < image.height(); y++) {
+            float factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+            float valR = factor * (image(x, y, 0) - 128) + 128;
+            float valG = factor * (image(x, y, 1) - 128) + 128;
+            float valB = factor * (image(x, y, 2) - 128) + 128;
+            if(valR <= 0) image(x, y,0) = 0;
+            else if (valR >= 255) image(x, y,0) = 255;
+            else image(x, y,0) = valR;
+
+            if(valG <= 0) image(x, y,1) = 0;
+            else if (valG >= 255) image(x, y,1) = 255;
+            else image(x, y,1) = valG;
+
+            if(valB <= 0) image(x, y,2) = 0;
+            else if (valB >= 255) image(x, y,2) = 255;
+            else image(x, y,2) = valB;
+        }
+    }
+}
+
 void negative(CImg<unsigned char> &image)
 {
     for (int x = 0; x < image.width(); x++)
