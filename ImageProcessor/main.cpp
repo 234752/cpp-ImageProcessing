@@ -3,15 +3,21 @@
 #include "Task1G.cpp"
 #include "Task1E.cpp"
 #include <iostream>
+#include "Task1N.cpp"
 
 int main() {
     cimg_library::CImg<unsigned char> image("..\\..\\img\\color_24bit\\lenac_small.bmp");
     cimg_library::CImg<unsigned char> image_low_noise("..\\..\\img\\color_noise_24bit\\impulse\\lenac_impulse1_small.bmp");
     cimg_library::CImg<unsigned char> image_high_noise("..\\..\\img\\color_noise_24bit\\impulse\\lenac_impulse3_small.bmp");
+    //cimg_library::CImg<unsigned char> image("..\\..\\img\\color_24bit\\lenac_small.bmp");
     //cimg_library::CImg<unsigned char> image("..\\..\\img\\gray_scale_8bit\\lena_small.bmp");
+    cimg_library::CImg<unsigned char> image("..\\..\\img\\gray_scale_noise_8bit\\uniform_dist\\lena_uniform3_small.bmp");
 
+    adaptiveMedianFilter(image);
     //contrast(image, 180);
 
+    //image.save_bmp("..\\..\\img\\color_24bit\\out.bmp");
+    image.save_bmp("..\\..\\img\\color_noise_24bit\\uniform_dist\\out.bmp");
     std::cout << "\nLow noise: " << peakSignalToNoiseRatio(image, image_low_noise);
     std::cout << "\nHigh noise: " << peakSignalToNoiseRatio(image, image_high_noise);
     //image.save_bmp("..\\..\\img\\color_24bit\\out.bmp");
