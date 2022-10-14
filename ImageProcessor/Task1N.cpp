@@ -10,7 +10,10 @@ int stageB(int zxy, int zmed, int zmin, int zmax)
     int B2 = zxy - zmax;
 
     if(B1 > 0 && B2 < 0) return zxy;
-    else return zmed;
+    else
+    {
+        return zmed;
+    }
 }
 
 int stageA(int zxy, int zmed, int zmin, int zmax, int Sxy, int Smax)
@@ -22,14 +25,18 @@ int stageA(int zxy, int zmed, int zmin, int zmax, int Sxy, int Smax)
     else
     {
         Sxy++;
-        if(Sxy <= Smax) return stageA(zxy, zmed, zmin, zmax, Sxy, Smax);
-        else return zxy;
+        if(Sxy <= Smax) return 1000;
+        else
+        {
+            return zxy;
+        }
     }
 }
 
 
 void adaptiveMedianFilter(CImg<unsigned char> &image)
 {
+    CImg<unsigned char> filteredImage = image;
     for (int x = 1; x < image.width()-1; x++)
     {
         for (int y = 1; y < image.height()-1; y++)
@@ -40,32 +47,44 @@ void adaptiveMedianFilter(CImg<unsigned char> &image)
             if(y < Smax) Smax = y;
             int Sxy = 1;
 
-            int zmin = 255;
-            int zmax = 0;
-            int zmed;
-            int zxy = image(x, y, 0);
-
-            std::vector<int> values;
-
-            for (int xi = x - Sxy; xi < x + Sxy; xi++)
+            int result = 1000;
+            while(true)
             {
-                for (int yi = y - Sxy; yi < y + Sxy; yi++)
+                int zmin = 255;
+                int zmax = 0;
+                int zmed;
+                int zxy = image(x, y, 0);
+
+                std::vector<int> values;
+
+                for (int xi = x - Sxy; xi <= x + Sxy; xi++)
                 {
-                    if(xi != x || yi != y) values.push_back(image(xi, yi, 0));
+                    for (int yi = y - Sxy; yi <= y + Sxy; yi++)
+                    {
+                        if(xi != x || yi != y) values.push_back(image(xi, yi, 0));
+                    }
                 }
+                std::sort(values.begin(), values.end());
+                zmin = values.front();
+                zmax = values.back();
+                if(values.size()%2 == 0)
+                {
+                    zmed = 0.5 * (values[values.size() / 2 - 1] + values[values.size() / 2]);
+                }
+                else
+                {
+                    zmed = values[values.size() / 2];
+                }
+                result = stageA(zxy, zmed, zmin, zmax, Sxy, Smax);
+                if(result == 1000) Sxy++;
+                else break;
             }
-            std::sort(values.begin(), values.end());
-            zmin = values.front();
-            zmax = values.back();
-            zmed = values[values.size() / 2];
-
-            int result = stageA(zxy, zmed, zmin, zmax, Sxy, Smax);
-
-            image(x, y, 0) = result;
-            image(x, y, 1) = result;
-            image(x, y, 2) = result;
+            filteredImage(x, y, 0) = result;
+            filteredImage(x, y, 1) = result;
+            filteredImage(x, y, 2) = result;
         }
     }
+    image = filteredImage;
 }
 
 
