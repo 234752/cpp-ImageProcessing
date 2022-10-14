@@ -9,10 +9,7 @@ int stageB(int zxy, int zmed, int zmin, int zmax)
     int B2 = zxy - zmax;
 
     if(B1 > 0 && B2 < 0) return zxy;
-    else
-    {
-        return zmed;
-    }
+    else return zmed;
 }
 
 int stageA(int zxy, int zmed, int zmin, int zmax, int Sxy, int Smax)
@@ -23,11 +20,8 @@ int stageA(int zxy, int zmed, int zmin, int zmax, int Sxy, int Smax)
     if(A1 > 0 && A2 < 0) return stageB(zxy, zmed, zmin, zmax);
     else
     {
-        if(Sxy <= Smax) return 1000;
-        else
-        {
-            return zxy;
-        }
+        if(Sxy < Smax) return 2137;
+        else return zxy;
     }
 }
 
@@ -39,8 +33,8 @@ int filterSinglePixel(CImg<unsigned char> image, int x, int y, int channel)
     if(y < Smax) Smax = y;
     int Sxy = 1;
 
-    int result = 1000;
-    while(result == 1000)
+    int result = 2137;
+    while(result == 2137)
     {
         std::vector<int> values;
         for (int xi = x - Sxy; xi <= x + Sxy; xi++)
@@ -66,7 +60,7 @@ int filterSinglePixel(CImg<unsigned char> image, int x, int y, int channel)
         }
 
         result = stageA(zxy, zmed, zmin, zmax, Sxy, Smax);
-        if(result == 1000) Sxy++;
+        Sxy++;
     }
     return result;
 }
