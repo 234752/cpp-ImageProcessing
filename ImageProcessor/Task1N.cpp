@@ -8,11 +8,15 @@ struct Pixel
     int Red = 0;
     int Green = 0;
     int Blue = 0;
-    Pixel(int r, int g, int b)
+    int X;
+    int Y;
+    Pixel(int r, int g, int b, int x, int y)
     {
         Red = r;
         Green = g;
         Blue = b;
+        X = x;
+        Y = y;
     }
     friend bool operator<(const Pixel& p1, const Pixel& p2)
     {
@@ -86,40 +90,48 @@ int filterSinglePixel(CImg<unsigned char> image, int x, int y, int channel)
 Pixel filterSinglePixelMin(CImg<unsigned char> image, int x, int y)
 {
     int Sxy = 1;
-
     std::vector<Pixel> values;
+    int avgR = 0;
+    int avgG = 0;
+    int avgB = 0;
     for (int xi = x - Sxy; xi <= x + Sxy; xi++)
     {
         for (int yi = y - Sxy; yi <= y + Sxy; yi++)
         {
             //if(xi != x || yi != y)
-            values.push_back(Pixel(image(xi, yi, 0), image(xi, yi, 1), image(xi, yi, 2)));
+            Pixel p = Pixel(image(xi, yi, 0), image(xi, yi, 1), image(xi, yi, 2), x, y);
+            values.push_back(p);
+            avgR += p.Red;
+            avgG += p.Green;
+            avgB += p.Blue;
         }
     }
-
     std::sort(values.begin(), values.end());
     Pixel result = values[0];
+    result.Red = avgR/9;
+    result.Green = avgG/9;
+    result.Blue = avgB/9;
     return result;
 }
 
-int filterSinglePixelMax(CImg<unsigned char> image, int x, int y, int channel)
-{
-    int Sxy = 1;
-
-    std::vector<int> values;
-    for (int xi = x - Sxy; xi <= x + Sxy; xi++)
-    {
-        for (int yi = y - Sxy; yi <= y + Sxy; yi++)
-        {
-            //if(xi != x || yi != y)
-            values.push_back(image(xi, yi, 0));
-        }
-    }
-
-    std::sort(values.begin(), values.end());
-    int result = values[8];
-    return result;
-}
+//Pixel filterSinglePixelMax(CImg<unsigned char> image, int x, int y)
+//{
+//    int Sxy = 1;
+//
+//    std::vector<Pixel> values;
+//    for (int xi = x - Sxy; xi <= x + Sxy; xi++)
+//    {
+//        for (int yi = y - Sxy; yi <= y + Sxy; yi++)
+//        {
+//            //if(xi != x || yi != y)
+//            values.push_back(Pixel(image(xi, yi, 0), image(xi, yi, 1), image(xi, yi, 2)));
+//        }
+//    }
+//
+//    std::sort(values.begin(), values.end());
+//    Pixel result = values[8];
+//    return result;
+//}
 
 void adaptiveMedianFilter(CImg<unsigned char> &image)
 {
@@ -128,9 +140,22 @@ void adaptiveMedianFilter(CImg<unsigned char> &image)
     {
         for (int y = 1; y < image.height()-1; y++)
         {
-            filteredImage(x, y, 0) = filterSinglePixel(image, x, y, 0);
-            filteredImage(x, y, 1) = filterSinglePixel(image, x, y, 1);
-            filteredImage(x, y, 2) = filterSinglePixel(image, x, y, 2);
+//            filteredImage(x, y, 0) = filterSinglePixel(image, x, y, 0);
+//            filteredImage(x, y, 1) = filterSinglePixel(image, x, y, 1);
+//            filteredImage(x, y, 2) = filterSinglePixel(image, x, y, 2);
+
+//            filteredImage(x, y, 0) = filterSinglePixelMax(image, x, y).Red;
+//            filteredImage(x, y, 1) = filterSinglePixelMax(image, x, y).Green;
+//            filteredImage(x, y, 2) = filterSinglePixelMax(image, x, y).Blue;
+
+                Pixel result = filterSinglePixelMin(image, x, y);
+                filteredImage(result.X, result.Y, 0) = result.Red;
+                filteredImage(result.X, result.Y, 1) = result.Green;
+                filteredImage(result.X, result.Y, 2) = result.Blue;
+
+//            filteredImage(x, y, 0) = filterSinglePixelMin(image, x, y).Red;
+//            filteredImage(x, y, 1) = filterSinglePixelMin(image, x, y).Green;
+//            filteredImage(x, y, 2) = filterSinglePixelMin(image, x, y).Blue;
         }
     }
     image = filteredImage;
