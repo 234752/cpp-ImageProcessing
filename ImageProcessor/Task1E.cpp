@@ -17,15 +17,11 @@ float peakMeanSquareError(CImg<unsigned char> &image1, CImg<unsigned char> &imag
     float m = 0;
     for (unsigned int x = 0; x < image1.width(); x++) {
         for (unsigned int y = 0; y < image1.height(); y++) {
+            e += pow((image1(x,y) - image2(x,y)), 2);
             if(image1(x,y) > m) m = image1(x,y);
         }
     }
-    for (unsigned int x = 0; x < image1.width(); x++) {
-        for (unsigned int y = 0; y < image1.height(); y++) {
-            e += pow((image1(x,y) - image2(x,y)), 2);
-        }
-    }
-    return e/(image1.height()*image2.width()); //idk where to divide by m
+    return e/(image1.height() * image2.width() * m);
 }
 
 float signalToNoiseRatio(CImg<unsigned char> &image1, CImg<unsigned char> &image2) {
