@@ -66,7 +66,7 @@ int filterSinglePixel(CImg<unsigned char> image, int x, int y, int channel)
         std::sort(values.begin(), values.end());
         int zmin = values.front();
         int zmax = values.back();
-        int zxy = image(x, y, 0);
+        int zxy = image(x, y, channel);
         int zmed;
         if(values.size()%2 == 0)
         {
@@ -128,9 +128,9 @@ void adaptiveMedianFilter(CImg<unsigned char> &image)
     {
         for (int y = 1; y < image.height()-1; y++)
         {
-            filteredImage(x, y, 0) = filterSinglePixelMin(image, x, y).Red;
-            filteredImage(x, y, 1) = filterSinglePixelMin(image, x, y).Green;
-            filteredImage(x, y, 2) = filterSinglePixelMin(image, x, y).Blue;
+            filteredImage(x, y, 0) = filterSinglePixel(image, x, y, 0);
+            filteredImage(x, y, 1) = filterSinglePixel(image, x, y, 1);
+            filteredImage(x, y, 2) = filterSinglePixel(image, x, y, 2);
         }
     }
     image = filteredImage;
