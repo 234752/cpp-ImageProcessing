@@ -41,7 +41,8 @@ int filterSinglePixel(CImg<unsigned char> image, int x, int y, int channel)
         {
             for (int yi = y - Sxy; yi <= y + Sxy; yi++)
             {
-                if(xi != x || yi != y) values.push_back(image(xi, yi, channel));
+                //if(xi != x || yi != y)
+                    values.push_back(image(xi, yi, channel));
             }
         }
 
@@ -65,6 +66,44 @@ int filterSinglePixel(CImg<unsigned char> image, int x, int y, int channel)
     return result;
 }
 
+int filterSinglePixelMin(CImg<unsigned char> image, int x, int y, int channel)
+{
+    int Sxy = 1;
+
+    std::vector<int> values;
+    for (int xi = x - Sxy; xi <= x + Sxy; xi++)
+    {
+        for (int yi = y - Sxy; yi <= y + Sxy; yi++)
+        {
+            //if(xi != x || yi != y)
+            values.push_back(image(xi, yi));
+        }
+    }
+
+    std::sort(values.begin(), values.end());
+    int result = values[0];
+    return result;
+}
+
+int filterSinglePixelMax(CImg<unsigned char> image, int x, int y, int channel)
+{
+    int Sxy = 1;
+
+    std::vector<int> values;
+    for (int xi = x - Sxy; xi <= x + Sxy; xi++)
+    {
+        for (int yi = y - Sxy; yi <= y + Sxy; yi++)
+        {
+            //if(xi != x || yi != y)
+            values.push_back(image(xi, yi));
+        }
+    }
+
+    std::sort(values.begin(), values.end());
+    int result = values[8];
+    return result;
+}
+
 void adaptiveMedianFilter(CImg<unsigned char> &image)
 {
     CImg<unsigned char> filteredImage = image;
@@ -79,5 +118,7 @@ void adaptiveMedianFilter(CImg<unsigned char> &image)
     }
     image = filteredImage;
 }
+
+
 
 
