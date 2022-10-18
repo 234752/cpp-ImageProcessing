@@ -99,7 +99,7 @@ Pixel filterSinglePixelMin(CImg<unsigned char> image, int x, int y)
         for (int yi = y - Sxy; yi <= y + Sxy; yi++)
         {
             //if(xi != x || yi != y)
-            Pixel p = Pixel(image(xi, yi, 0), image(xi, yi, 1), image(xi, yi, 2), x, y);
+            Pixel p = Pixel(image(xi, yi, 0), image(xi, yi, 1), image(xi, yi, 2), xi, yi);
             values.push_back(p);
             avgR += p.Red;
             avgG += p.Green;
@@ -108,6 +108,33 @@ Pixel filterSinglePixelMin(CImg<unsigned char> image, int x, int y)
     }
     std::sort(values.begin(), values.end());
     Pixel result = values[0];
+    result.Red = avgR/9;
+    result.Green = avgG/9;
+    result.Blue = avgB/9;
+    return result;
+}
+
+Pixel filterSinglePixelMax(CImg<unsigned char> image, int x, int y)
+{
+    int Sxy = 1;
+    std::vector<Pixel> values;
+    int avgR = 0;
+    int avgG = 0;
+    int avgB = 0;
+    for (int xi = x - Sxy; xi <= x + Sxy; xi++)
+    {
+        for (int yi = y - Sxy; yi <= y + Sxy; yi++)
+        {
+            //if(xi != x || yi != y)
+            Pixel p = Pixel(image(xi, yi, 0), image(xi, yi, 1), image(xi, yi, 2), xi, yi);
+            values.push_back(p);
+            avgR += p.Red;
+            avgG += p.Green;
+            avgB += p.Blue;
+        }
+    }
+    std::sort(values.begin(), values.end());
+    Pixel result = values[8];
     result.Red = avgR/9;
     result.Green = avgG/9;
     result.Blue = avgB/9;
@@ -136,9 +163,9 @@ Pixel filterSinglePixelMin(CImg<unsigned char> image, int x, int y)
 void adaptiveMedianFilter(CImg<unsigned char> &image)
 {
     CImg<unsigned char> filteredImage = image;
-    for (int x = 1; x < image.width()-1; x++)
+    for (int x = 1; x < image.width()-1; x=x+3)
     {
-        for (int y = 1; y < image.height()-1; y++)
+        for (int y = 1; y < image.height()-1; y=y+3)
         {
 //            filteredImage(x, y, 0) = filterSinglePixel(image, x, y, 0);
 //            filteredImage(x, y, 1) = filterSinglePixel(image, x, y, 1);
