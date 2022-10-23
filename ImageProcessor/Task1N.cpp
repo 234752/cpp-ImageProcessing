@@ -18,6 +18,10 @@ struct Pixel
     {
         return p1.Red + p1.Green + p1.Blue < p2.Red + p2.Green + p2.Blue;
     }
+    friend bool operator>(const Pixel& p1, const Pixel& p2)
+    {
+        return p1.Red + p1.Green + p1.Blue > p2.Red + p2.Green + p2.Blue;
+    }
 };
 
 int stageB(int zxy, int zmed, int zmin, int zmax)
@@ -84,38 +88,30 @@ int filterSinglePixelMedian(CImg<unsigned char> image, int x, int y, int channel
 
 Pixel filterSinglePixelMin(CImg<unsigned char> image, int x, int y)
 {
-    int Sxy = 1;
-
-    std::vector<Pixel> pixels;
-    for (int xi = x - Sxy; xi <= x + Sxy; xi++)
+    Pixel minPixel = Pixel(image(x, y, 0), image(x, y, 1), image(x, y, 2));
+    for (int xi = x - 1; xi <= x + 1; xi++)
     {
-        for (int yi = y - Sxy; yi <= y + Sxy; yi++)
+        for (int yi = y - 1; yi <= y + 1; yi++)
         {
-            pixels.push_back(Pixel(image(xi, yi, 0), image(xi, yi, 1), image(xi, yi, 2)));
+            Pixel p = Pixel(image(xi, yi, 0), image(xi, yi, 1), image(xi, yi, 2));
+            if(p < minPixel) minPixel = p;
         }
     }
-
-    std::sort(pixels.begin(), pixels.end());
-    Pixel result = pixels[0];
-    return result;
+    return minPixel;
 }
 
 Pixel filterSinglePixelMax(CImg<unsigned char> image, int x, int y)
 {
-    int Sxy = 1;
-
-    std::vector<Pixel> pixels;
-    for (int xi = x - Sxy; xi <= x + Sxy; xi++)
+    Pixel maxPixel = Pixel(image(x, y, 0), image(x, y, 1), image(x, y, 2));
+    for (int xi = x - 1; xi <= x + 1; xi++)
     {
-        for (int yi = y - Sxy; yi <= y + Sxy; yi++)
+        for (int yi = y - 1; yi <= y + 1; yi++)
         {
-            pixels.push_back(Pixel(image(xi, yi, 0), image(xi, yi, 1), image(xi, yi, 2)));
+            Pixel p = Pixel(image(xi, yi, 0), image(xi, yi, 1), image(xi, yi, 2));
+            if(p > maxPixel) maxPixel = p;
         }
     }
-
-    std::sort(pixels.begin(), pixels.end());
-    Pixel result = pixels[8];
-    return result;
+    return maxPixel;
 }
 
 void minFilter(CImg<unsigned char> &image)
