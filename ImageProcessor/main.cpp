@@ -1,50 +1,65 @@
 #include <iostream>
-#include "lib/CImg.h"
 #include "lib/popl.hpp"
+#include "lib/CImg.h"
 #include "task1/Task1B.cpp"
 #include "task1/Task1G.cpp"
 #include "task1/Task1E.cpp"
 #include "task1/Task1N.cpp"
 
-using namespace std;
+
 using namespace popl;
 
 int main(int argc, char *argv[]) {
 
     OptionParser op("Allowed options");
-    auto help_option     = op.add<Switch>("h", "help", "produce help message");
-    auto string_option   = op.add<Value<string>>("s", "string", "test for string values");
+    auto help_option     = op.add<Switch>("", "help", "produce help message");
 
-    auto brightness_option = op.add<Value<int>>("b", "brightness", "brightness modification", 0);
-    auto contrast_option = op.add<Value<int>>("c", "contrast", "contrast modification", 0);
-    auto negative_option = op.add<Switch>("n", "negative", "turn image into negative");
+    //input image
+    auto input_option = op.add<Value<std::string>>("", "input-image", "provide name or path to input image [obligatory in case of all operations]", "");
+
+    //B options
+    auto brightness_option = op.add<Value<int>>("", "brightness", "brightness modification", 0);
+    auto contrast_option = op.add<Value<int>>("", "contrast", "contrast modification", 0);
+    auto negative_option = op.add<Switch>("", "negative", "turn image into negative");
+
+    //G options
+    auto hflip_option = op.add<Switch>("", "hflip", "flip horizontally");
+    auto vflip_option = op.add<Switch>("", "vflip", "flip vertically");
+    auto dflip_option = op.add<Switch>("", "dflip", "flip diagonally (rotate by 180 degrees)");
+    auto shrink_option = op.add<Value<float>>("", "shrink", "shrink image by a selected factor", 1.0);
+    auto enlarge_option = op.add<Value<float>>("", "enlarge", "enlarge image by a selected factor", 1.0);
+
+    //N options
+    auto adaptive_option = op.add<Switch>("", "adaptive", "filter image using adaptive median filter");
+    auto min_option = op.add<Switch>("", "min", "filter image using min filter");
+    auto max_option = op.add<Switch>("", "max", "filter image using max filter");
+
+    //E options
+    auto original_option = op.add<Value<std::string>>("", "original-image", "provide name or path to original image [obligatory in case of all error calculations]", "");
+    auto mse_option = op.add<Switch>("", "mse", "calculate mean square error");
+    auto pmse_option = op.add<Switch>("", "pmse", "calculate peak mean square error");
+    auto snr_option = op.add<Switch>("", "snr", "calculate signal to noise ratio");
+    auto psnr_option = op.add<Switch>("", "psnr", "calculate peak signal to noise ratio");
+    auto md_option = op.add<Switch>("", "md", "calculate maximum difference between images");
 
     op.parse(argc, argv);
 
     // print auto-generated help message
-    if (help_option->count() == 1) cout << op << "\n";
-    else if (help_option->count() == 2) cout << op.help(Attribute::advanced) << "\n";
-    else if (help_option->count() > 2) cout << op.help(Attribute::expert) << "\n";
+    if (help_option->is_set()) std::cout << op << "\n";
 
     // show all non option arguments (those without "-o" or "--option")
-    for (const auto& non_option_arg: op.non_option_args())
-        cout << "non_option_args: " << non_option_arg << "\n";
+    for (const auto& non_option_arg: op.non_option_args()) std::cout << "non_option_args: " << non_option_arg << "\n";
 
     // show unknown options (undefined ones, like "-u" or "--undefined")
-    for (const auto& unknown_option: op.unknown_options())
-        cout << "unknown_options: " << unknown_option << "\n";
+    for (const auto& unknown_option: op.unknown_options()) std::cout << "unknown_options: " << unknown_option << "\n";
 
-    // print all the configured values
-    cout << "string_option   - is_set: " << string_option->is_set() << ", count: " << string_option->count() << "\n";
-    if (string_option->is_set())
+    if(input_option->is_set())
     {
-        for (size_t n=0; n<string_option->count(); ++n)
-            cout << "string_option #" << n << " - value: " << string_option->value(n) << "\n";
+        if(original_option->is_set())
+        {
+            std::cout<<input_option->value()<<"  "<<original_option->value();
+        }
     }
-
-    cout << "brightness   - is_set: " << brightness_option->is_set() << ", count: " << brightness_option->count() << ", value: " << brightness_option->value() << "\n";
-    cout << "contrast   - is_set: " << contrast_option->is_set() << ", count: " << contrast_option->count() << ", value: " << contrast_option->value() << "\n";
-    cout << "negative   - is_set: " << negative_option->is_set() << ", count: " << negative_option->count() << "\n";
 
     return 0;
 }
