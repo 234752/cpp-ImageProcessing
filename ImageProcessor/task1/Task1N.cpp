@@ -1,4 +1,4 @@
-#include "CImg.h"
+#include "../lib/CImg.h"
 #include <vector>
 
 using namespace cimg_library;
