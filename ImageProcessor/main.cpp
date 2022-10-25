@@ -13,7 +13,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     OptionParser op("Allowed options");
-    auto help_option     = op.add<Switch>("", "help", "produce help message");
+    auto help_option     = op.add<Switch>("h", "help", "produce help message");
 
     //B options
     auto brightness_option = op.add<Value<int>>("", "brightness", "brightness modification", 0);
@@ -42,7 +42,10 @@ int main(int argc, char *argv[])
     op.parse(argc, argv);
 
     // print auto-generated help message
-    if (help_option->is_set()) std::cout << op << "\n";
+    if (help_option->is_set()) {
+        std::cout << op << "\n";
+        return 0;
+    }
 
     // show all non option arguments (those without "-o" or "--option")
     for (const auto& non_option_arg: op.non_option_args()) std::cout << "non_option_args: " << non_option_arg << "\n";
