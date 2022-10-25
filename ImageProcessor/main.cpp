@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
     if(psnr_option->is_set()) cout<<"Peak signal to noise ratio: "<<peakSignalToNoiseRatio(inputImage, originalImage)<<endl;
     if(md_option->is_set()) cout<<"Max difference: "<<maxDifference(inputImage, originalImage)<<endl;
 
-    inputImage.save("..\\..\\img\\test\\out.bmp");
-
+    //inputImage.save("..\\..\\img\\test\\out.bmp");
+    inputImage.save("out.bmp");
     return 0;
 }
