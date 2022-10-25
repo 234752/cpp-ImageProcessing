@@ -74,22 +74,57 @@ int main(int argc, char *argv[])
         }
     }
 
+    bool save = false;
+
     //B options execution
-    if(brightness_option->is_set()) brightnessModification(inputImage, brightness_option->value());
-    if(contrast_option->is_set()) contrast(inputImage, contrast_option->value());
-    if(negative_option->is_set()) negative(inputImage);
+    if(brightness_option->is_set()) {
+        brightnessModification(inputImage, brightness_option->value());
+        save = true;
+    }
+    if(contrast_option->is_set()) {
+        contrast(inputImage, contrast_option->value());
+        save = true;
+    }
+    if(negative_option->is_set()) {
+        negative(inputImage);
+        save = true;
+    }
 
     //G options execution
-    if(hflip_option->is_set()) horizontalFlip(inputImage);
-    if(vflip_option->is_set()) verticalFlip(inputImage);
-    if(dflip_option->is_set()) diagonalFlip(inputImage);
-    if(shrink_option->is_set()) scale(inputImage, 1.0/shrink_option->value());
-    if(enlarge_option->is_set()) scale(inputImage, enlarge_option->value());
+    if(hflip_option->is_set()) {
+        horizontalFlip(inputImage);
+        save = true;
+    }
+    if(vflip_option->is_set()) {
+        verticalFlip(inputImage);
+        save = true;
+    }
+    if(dflip_option->is_set()) {
+        diagonalFlip(inputImage);
+        save = true;
+    }
+    if(shrink_option->is_set()) {
+        scale(inputImage, 1.0/shrink_option->value());
+        save = true;
+    }
+    if(enlarge_option->is_set()) {
+        scale(inputImage, enlarge_option->value());
+        save = true;
+    }
 
     //N options execution
-    if(adaptive_option->is_set()) adaptiveMedianFilter(inputImage);
-    if(min_option->is_set()) minFilter(inputImage);
-    if(max_option->is_set()) maxFilter(inputImage);
+    if(adaptive_option->is_set()) {
+        adaptiveMedianFilter(inputImage);
+        save = true;
+    }
+    if(min_option->is_set()) {
+        minFilter(inputImage);
+        save = true;
+    }
+    if(max_option->is_set()) {
+        maxFilter(inputImage);
+        save = true;
+    }
 
     //E options execution
     if(mse_option->is_set()) cout<<"Mean square error: "<<meanSquareError(inputImage, originalImage)<<endl;
@@ -98,7 +133,10 @@ int main(int argc, char *argv[])
     if(psnr_option->is_set()) cout<<"Peak signal to noise ratio: "<<peakSignalToNoiseRatio(inputImage, originalImage)<<endl;
     if(md_option->is_set()) cout<<"Max difference: "<<maxDifference(inputImage, originalImage)<<endl;
 
-    //inputImage.save("..\\..\\img\\test\\out.bmp");
-    inputImage.save("out.bmp");
+    if(save) {
+        //inputImage.save("..\\..\\img\\test\\out.bmp");
+        inputImage.save("out.bmp");
+    }
+
     return 0;
 }
