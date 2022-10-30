@@ -29,8 +29,8 @@ int main(int argc, char *argv[])
 
     //N options
     auto adaptive_option = op.add<Switch>("", "adaptive", "filter image using adaptive median filter");
-    auto min_option = op.add<Switch>("", "min", "filter image using min filter");
-    auto max_option = op.add<Switch>("", "max", "filter image using max filter");
+    auto min_option = op.add<Value<int>>("", "min", "filter image using min filter", 1);
+    auto max_option = op.add<Value<int>>("", "max", "filter image using max filter", 1);
 
     //E options
     auto mse_option = op.add<Switch>("", "mse", "calculate mean square error");
@@ -121,11 +121,11 @@ int main(int argc, char *argv[])
         save = true;
     }
     if(min_option->is_set()) {
-        minFilter(inputImage);
+        minFilter(inputImage, min_option->value());
         save = true;
     }
     if(max_option->is_set()) {
-        maxFilter(inputImage);
+        maxFilter(inputImage, max_option->value());
         save = true;
     }
 

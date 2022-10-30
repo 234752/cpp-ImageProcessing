@@ -86,12 +86,12 @@ int filterSinglePixelMedian(CImg<unsigned char> image, int x, int y, int channel
     return result;
 }
 
-Pixel filterSinglePixelMin(CImg<unsigned char> image, int x, int y)
+Pixel filterSinglePixelMin(CImg<unsigned char> image, int x, int y, int range)
 {
     Pixel minPixel = Pixel(image(x, y, 0), image(x, y, 1), image(x, y, 2));
-    for (int xi = x - 1; xi <= x + 1; xi++)
+    for (int xi = x - range; xi <= x + range; xi++)
     {
-        for (int yi = y - 1; yi <= y + 1; yi++)
+        for (int yi = y - range; yi <= y + range; yi++)
         {
             Pixel p = Pixel(image(xi, yi, 0), image(xi, yi, 1), image(xi, yi, 2));
             if(p < minPixel) minPixel = p;
@@ -100,12 +100,12 @@ Pixel filterSinglePixelMin(CImg<unsigned char> image, int x, int y)
     return minPixel;
 }
 
-Pixel filterSinglePixelMax(CImg<unsigned char> image, int x, int y)
+Pixel filterSinglePixelMax(CImg<unsigned char> image, int x, int y, int range)
 {
     Pixel maxPixel = Pixel(image(x, y, 0), image(x, y, 1), image(x, y, 2));
-    for (int xi = x - 1; xi <= x + 1; xi++)
+    for (int xi = x - range; xi <= x + range; xi++)
     {
-        for (int yi = y - 1; yi <= y + 1; yi++)
+        for (int yi = y - range; yi <= y + range; yi++)
         {
             Pixel p = Pixel(image(xi, yi, 0), image(xi, yi, 1), image(xi, yi, 2));
             if(p > maxPixel) maxPixel = p;
@@ -114,14 +114,14 @@ Pixel filterSinglePixelMax(CImg<unsigned char> image, int x, int y)
     return maxPixel;
 }
 
-void minFilter(CImg<unsigned char> &image)
+void minFilter(CImg<unsigned char> &image, int range)
 {
     CImg<unsigned char> filteredImage = image;
-    for (int x = 1; x < image.width()-1; x=x+1)
+    for (int x = range; x < image.width()-range; x++)
     {
-        for (int y = 1; y < image.height()-1; y=y+1)
+        for (int y = range; y < image.height()-range; y++)
         {
-            Pixel result = filterSinglePixelMin(image, x, y);
+            Pixel result = filterSinglePixelMin(image, x, y, range);
             filteredImage(x, y, 0) = result.Red;
             filteredImage(x, y, 1) = result.Green;
             filteredImage(x, y, 2) = result.Blue;
@@ -130,14 +130,14 @@ void minFilter(CImg<unsigned char> &image)
     image = filteredImage;
 }
 
-void maxFilter(CImg<unsigned char> &image)
+void maxFilter(CImg<unsigned char> &image, int range)
 {
     CImg<unsigned char> filteredImage = image;
-    for (int x = 1; x < image.width()-1; x=x+1)
+    for (int x = range; x < image.width()-range; x=x+1)
     {
-        for (int y = 1; y < image.height()-1; y=y+1)
+        for (int y = range; y < image.height()-range; y=y+1)
         {
-            Pixel result = filterSinglePixelMax(image, x, y);
+            Pixel result = filterSinglePixelMax(image, x, y, range);
             filteredImage(x, y, 0) = result.Red;
             filteredImage(x, y, 1) = result.Green;
             filteredImage(x, y, 2) = result.Blue;
