@@ -64,11 +64,11 @@ float maxDifference(CImg<unsigned char> &image1, CImg<unsigned char> &image2) {
     for (unsigned int x = 0; x < image1.width(); x++) {
         for (unsigned int y = 0; y < image1.height(); y++) {
             if (std::abs(image1(x, y, 0) - image2(x, y, 0))
-              + std::abs(image1(x, y, 0) - image2(x, y, 0))
-              + std::abs(image1(x, y, 0) - image2(x, y, 0)) > m) {
+              + std::abs(image1(x, y, 1) - image2(x, y, 1))
+              + std::abs(image1(x, y, 2) - image2(x, y, 2)) > m) {
                 m = std::abs(image1(x, y, 0) - image2(x, y, 0))
-                  + std::abs(image1(x, y, 0) - image2(x, y, 0))
-                  + std::abs(image1(x, y, 0) - image2(x, y, 0));
+                  + std::abs(image1(x, y, 1) - image2(x, y, 1))
+                  + std::abs(image1(x, y, 2) - image2(x, y, 2));
             }
         }
     }
