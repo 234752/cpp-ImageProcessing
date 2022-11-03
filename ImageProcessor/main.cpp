@@ -47,12 +47,6 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    // show all non option arguments (those without "-o" or "--option")
-    for (const auto& non_option_arg: op.non_option_args()) std::cout << "non_option_args: " << non_option_arg << "\n";
-
-    // show unknown options (undefined ones, like "-u" or "--undefined")
-    for (const auto& unknown_option: op.unknown_options()) std::cout << "unknown_options: " << unknown_option << "\n";
-
     CImg<unsigned char> inputImage;
     CImg<unsigned char> originalImage;
     const char *const input_image_path = argv[1];
@@ -131,13 +125,12 @@ int main(int argc, char *argv[])
 
     //E options execution
     if(mse_option->is_set()) cout<<"Mean square error: "<<meanSquareError(inputImage, originalImage)<<endl;
-    if(pmse_option->is_set()) cout<<"peak mean square error: "<<peakMeanSquareError(inputImage, originalImage)<<endl;
+    if(pmse_option->is_set()) cout<<"Peak mean square error: "<<peakMeanSquareError(inputImage, originalImage)<<endl;
     if(snr_option->is_set()) cout<<"Signal to noise ratio: "<<signalToNoiseRatio(inputImage, originalImage)<<endl;
     if(psnr_option->is_set()) cout<<"Peak signal to noise ratio: "<<peakSignalToNoiseRatio(inputImage, originalImage)<<endl;
     if(md_option->is_set()) cout<<"Max difference: "<<maxDifference(inputImage, originalImage)<<endl;
 
     if(save) {
-        //inputImage.save("..\\..\\img\\test\\out.bmp");
         inputImage.save("out.bmp");
     }
 
