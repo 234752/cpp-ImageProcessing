@@ -72,6 +72,28 @@ void contrast(CImg<unsigned char> &image, int contrast)
     }
 }
 
+void contrast2(CImg<unsigned char> &image, float a) {
+    for (int x = 0; x < image.width(); x++) {
+        for (int y = 0; y < image.height(); y++) {
+            float valR = 255.0 * pow((image(x, y, 0) / 255.0), a);
+            float valG = 255.0 * pow((image(x, y, 1) / 255.0), a);
+            float valB = 255.0 * pow((image(x, y, 2) / 255.0), a);
+
+            if(valR <= 0) image(x, y, 0) = 0;
+            else if (valR >= 255) image(x, y,0) = 255;
+            else image(x, y, 0) = valR;
+
+            if(valG <= 0) image(x, y, 1) = 0;
+            else if (valG >= 255) image(x, y,1) = 255;
+            else image(x, y,1) = valG;
+
+            if(valB <= 0) image(x, y, 2) = 0;
+            else if (valB >= 255) image(x, y,2) = 255;
+            else image(x, y,2) = valB;
+        }
+    }
+}
+
 void negative(CImg<unsigned char> &image)
 {
     for (int x = 0; x < image.width(); x++)

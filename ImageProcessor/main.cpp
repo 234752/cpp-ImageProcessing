@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
         save = true;
     }
     if(contrast_option->is_set()) {
-        contrast(inputImage, contrast_option->value());
+        contrast2(inputImage, contrast_option->value());
         save = true;
     }
     if(negative_option->is_set()) {
@@ -128,7 +128,11 @@ int main(int argc, char *argv[])
     }
 
     //E options execution
-    if(mse_option->is_set()) cout<<"Mean square error: "<<meanSquareError(inputImage, originalImage)<<endl;
+    if(mse_option->is_set()) {
+        CImg<unsigned char> image = CImg("ll0.bmp");
+        histogram(image, 0);
+        cout<<"Mean square error: "<<meanSquareError(inputImage, originalImage)<<endl;
+    }
     if(pmse_option->is_set()) cout<<"Peak mean square error: "<<peakMeanSquareError(inputImage, originalImage)<<endl;
     if(snr_option->is_set()) cout<<"Signal to noise ratio: "<<signalToNoiseRatio(inputImage, originalImage)<<endl;
     if(psnr_option->is_set()) cout<<"Peak signal to noise ratio: "<<peakSignalToNoiseRatio(inputImage, originalImage)<<endl;
