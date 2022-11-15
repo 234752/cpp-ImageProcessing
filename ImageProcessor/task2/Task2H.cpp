@@ -1,3 +1,13 @@
-//
-// Created on 15.11.2022.
-//
+#include "../lib/CImg.h"
+
+using namespace cimg_library;
+
+void histogram()
+{
+    throw std::exception();
+}
+
+void hyperbolicPDF()
+{
+    throw std::exception();
+}

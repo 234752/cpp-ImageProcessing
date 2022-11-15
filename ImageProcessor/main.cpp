@@ -5,6 +5,10 @@
 #include "task1/Task1G.cpp"
 #include "task1/Task1E.cpp"
 #include "task1/Task1N.cpp"
+#include "task2/Task2H.cpp"
+#include "task2/Task2C.cpp"
+#include "task2/Task2S.cpp"
+#include "task2/Task2O.cpp"
 
 
 using namespace popl;
