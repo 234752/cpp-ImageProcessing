@@ -17,7 +17,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     OptionParser op("Allowed options");
-    auto help_option     = op.add<Switch>("h", "help", "produce help message");
+    auto help_option= op.add<Switch>("h", "help", "produce help message");
 
     //B options
     auto brightness_option = op.add<Value<int>>("", "brightness", "brightness modification", 0);
@@ -42,6 +42,9 @@ int main(int argc, char *argv[])
     auto snr_option = op.add<Switch>("", "snr", "calculate signal to noise ratio");
     auto psnr_option = op.add<Switch>("", "psnr", "calculate peak signal to noise ratio");
     auto md_option = op.add<Switch>("", "md", "calculate maximum difference between images");
+
+    //H options
+    auto histogram_option = op.add<Value<int>>("", "histogram", "produce histogram");
 
     op.parse(argc, argv);
 
@@ -129,14 +132,21 @@ int main(int argc, char *argv[])
 
     //E options execution
     if(mse_option->is_set()) {
-        CImg<unsigned char> image = CImg("ll0.bmp");
-        histogram(image, 0);
         cout<<"Mean square error: "<<meanSquareError(inputImage, originalImage)<<endl;
     }
     if(pmse_option->is_set()) cout<<"Peak mean square error: "<<peakMeanSquareError(inputImage, originalImage)<<endl;
     if(snr_option->is_set()) cout<<"Signal to noise ratio: "<<signalToNoiseRatio(inputImage, originalImage)<<endl;
     if(psnr_option->is_set()) cout<<"Peak signal to noise ratio: "<<peakSignalToNoiseRatio(inputImage, originalImage)<<endl;
     if(md_option->is_set()) cout<<"Max difference: "<<maxDifference(inputImage, originalImage)<<endl;
+
+    //H options execution
+    if (histogram_option -> is_set()) {
+        if (histogram_option -> value() >= 0 && histogram_option -> value() <= 2) {
+            histogram(inputImage, histogram_option -> value());
+        } else {
+            std::cout << "Chanel value has to be between 0 and 2\n";
+        }
+    }
 
     if(save) {
         inputImage.save("out.bmp");
