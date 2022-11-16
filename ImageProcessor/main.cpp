@@ -142,7 +142,8 @@ int main(int argc, char *argv[])
     //H options execution
     if (histogram_option -> is_set()) {
         if (histogram_option -> value() >= 0 && histogram_option -> value() <= 2) {
-            histogram(inputImage, histogram_option -> value());
+            //histogram(inputImage, histogram_option -> value());
+            hyperbolicPDF(inputImage, histogram_option -> value(), 0, 155);
         } else {
             std::cout << "Chanel value has to be between 0 and 2\n";
         }
