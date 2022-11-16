@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     auto vflip_option = op.add<Switch>("", "vflip", "flip vertically");
     auto dflip_option = op.add<Switch>("", "dflip", "flip diagonally (rotate by 180 degrees)");
     auto shrink_option = op.add<Value<float>>("", "shrink", "shrink image by a selected factor", 1.0);
-    auto enlarge_option = op.add<Value<float>>("", "enlarge", "enlarge image by a selected factor", 1.0);
+    auto enlarge_option = op.add<Value<int>>("", "enlarge", "enlarge image by a selected factor", 1.0);
 
     //N options
     auto adaptive_option = op.add<Switch>("", "adaptive", "filter image using adaptive median filter");
@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
 
     //H options
     auto histogram_option = op.add<Value<int>>("", "histogram", "produce histogram");
+    auto hhyper_option = op.add<Value<int>>("", "hhyper", "apply hyperbolic pdf");
 
     op.parse(argc, argv);
 
@@ -131,9 +132,7 @@ int main(int argc, char *argv[])
     }
 
     //E options execution
-    if(mse_option->is_set()) {
-        cout<<"Mean square error: "<<meanSquareError(inputImage, originalImage)<<endl;
-    }
+    if(mse_option->is_set()) cout<<"Mean square error: "<<meanSquareError(inputImage, originalImage)<<endl;
     if(pmse_option->is_set()) cout<<"Peak mean square error: "<<peakMeanSquareError(inputImage, originalImage)<<endl;
     if(snr_option->is_set()) cout<<"Signal to noise ratio: "<<signalToNoiseRatio(inputImage, originalImage)<<endl;
     if(psnr_option->is_set()) cout<<"Peak signal to noise ratio: "<<peakSignalToNoiseRatio(inputImage, originalImage)<<endl;
@@ -142,8 +141,20 @@ int main(int argc, char *argv[])
     //H options execution
     if (histogram_option -> is_set()) {
         if (histogram_option -> value() >= 0 && histogram_option -> value() <= 2) {
-            //histogram(inputImage, histogram_option -> value());
-            hyperbolicPDF(inputImage, histogram_option -> value(), 0, 155);
+            histogram(inputImage, histogram_option -> value());
+        } else {
+            std::cout << "Chanel value has to be between 0 and 2\n";
+        }
+    }
+    if (hhyper_option -> is_set()) {
+        if (hhyper_option -> value() >= 0 && hhyper_option -> value() <= 2) {
+            //there could be a better way to get min and max
+            int min, max;
+            std::cout << "Minimal colour value: ";
+            std::cin >> min;
+            std::cout << "Maximal colour value: ";
+            std::cin >> max;
+            hyperbolicPDF(inputImage, hhyper_option -> value(), min, max);
         } else {
             std::cout << "Chanel value has to be between 0 and 2\n";
         }

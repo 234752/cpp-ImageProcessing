@@ -52,26 +52,18 @@ void hyperbolicPDF(CImg<unsigned char> &image, int channel, int min, int max)
             values[image(x, y, channel)]++;
         }
     }
-
     unsigned int newValues[256];
     if(min > 0) {
         for (unsigned int i = 0; i < 256; i++) {
-            unsigned int sum = 0;
-            sum = std::accumulate(values, values + i, 0);
-            newValues[i] = min * (pow(max / min, ((float) sum / (float) (image.height() * image.width()))));
+            unsigned int sum = std::accumulate(values, values + i, 0);
+            newValues[i] = min * (pow((float)max / (float)min, ((float) sum / (float) (image.height() * image.width()))));
         }
     } else {
         for (unsigned int i = 0; i < 256; i++) {
-            unsigned int sum = 0;
-            sum = std::accumulate(values, values + i, 0);
-            newValues[i] = 0.001 * (pow(max / 0.001, ((float) sum / (float) (image.height() * image.width()))));
+            unsigned int sum = std::accumulate(values, values + i, 0);
+            newValues[i] = 0.001 * (pow((float)max / 0.001, ((float) sum / (float) (image.height() * image.width()))));
         }
     }
-
-    for (unsigned int i = 0; i < 256; i++) {
-        std::cout << i << ". value: " << newValues[i] << "\n";
-    }
-
     for (unsigned short x = 0; x < 256; x++)
     {
         for (unsigned int y = 0; y < newValues[x]; y++)
