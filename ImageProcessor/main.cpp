@@ -48,7 +48,8 @@ int main(int argc, char *argv[])
     auto hhyper_option = op.add<Value<int>>("", "hhyper", "apply hyperbolic pdf");
 
     //C options
-    auto mean_option = op.add<Value<int>>("", "cmean", "calculate mean");
+    auto cmean_option = op.add<Value<int>>("", "cmean", "calculate mean");
+    auto cvariance_option = op.add<Value<int>>("", "cvariance", "calculate variance");
 
     op.parse(argc, argv);
 
@@ -164,7 +165,8 @@ int main(int argc, char *argv[])
     }
 
     //C options execution
-    if(mean_option->is_set()) cout<<"Mean: "<<mean(inputImage, mean_option->value())<<endl;
+    if(cmean_option->is_set()) cout<<"Mean: "<<mean(inputImage, cmean_option->value())<<endl;
+    if(cvariance_option->is_set()) cout<<"Variance: "<<variance(inputImage, cvariance_option->value())<<endl;
 
     if(save) {
         inputImage.save("out.bmp");
