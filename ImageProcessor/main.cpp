@@ -50,6 +50,12 @@ int main(int argc, char *argv[])
     //C options
     auto cmean_option = op.add<Value<int>>("", "cmean", "calculate mean");
     auto cvariance_option = op.add<Value<int>>("", "cvariance", "calculate variance");
+    auto cstdev_option = op.add<Value<int>>("", "cstdev", "calculate standard deviation");
+    auto cvarcoi_option = op.add<Value<int>>("", "cvarcoi", "calculate deviation coefficient");
+    auto casyco_option = op.add<Value<int>>("", "casyco", "calculate asymmetry coefficient");
+    auto cfsyco_option = op.add<Value<int>>("", "cfsyco", "calculate flattening coefficient");
+    auto cvarcoii_option = op.add<Value<int>>("", "cvarcoii", "calculate variation coefficient II");
+    auto centropy_option = op.add<Value<int>>("", "centropy", "calculate information source entropy");
 
     op.parse(argc, argv);
 
@@ -167,6 +173,13 @@ int main(int argc, char *argv[])
     //C options execution
     if(cmean_option->is_set()) cout<<"Mean: "<<mean(inputImage, cmean_option->value())<<endl;
     if(cvariance_option->is_set()) cout<<"Variance: "<<variance(inputImage, cvariance_option->value())<<endl;
+    if(cstdev_option->is_set()) cout<<"Variance: "<<deviation(inputImage, cstdev_option->value())<<endl;
+    if(cvarcoi_option->is_set()) cout<<"Variance: "<<variationCoefficient(inputImage, cvarcoi_option->value())<<endl;
+    if(casyco_option->is_set()) cout<<"Variance: "<<asymmetryCoefficient(inputImage, casyco_option->value())<<endl;
+    if(cfsyco_option->is_set()) cout<<"Variance: "<<flatteningCoefficient(inputImage, cfsyco_option->value())<<endl;
+    if(cvarcoii_option->is_set()) cout<<"Variance: "<<variationCoefficientII(inputImage, cvarcoii_option->value())<<endl;
+    if(centropy_option->is_set()) cout<<"Variance: "<<entropy(inputImage, centropy_option->value())<<endl;
+
 
     if(save) {
         inputImage.save("out.bmp");

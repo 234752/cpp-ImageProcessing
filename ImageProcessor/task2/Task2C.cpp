@@ -38,3 +38,34 @@ double variance(CImg<unsigned char> &image, int channel)
     variance /= (image.width() * image.height());
     return variance;
 }
+
+double deviation(CImg<unsigned char> &image, int channel)
+{
+    double v = variance(image, channel);
+    return pow(v, 0.5);
+}
+
+double variationCoefficient(CImg<unsigned char> &image, int channel)
+{
+    return 0;
+}
+
+double asymmetryCoefficient(CImg<unsigned char> &image, int channel)
+{
+    return 0;
+}
+
+double flatteningCoefficient(CImg<unsigned char> &image, int channel)
+{
+    return 0;
+}
+
+double variationCoefficientII(CImg<unsigned char> &image, int channel)
+{
+    return 0;
+}
+
+double entropy(CImg<unsigned char> &image, int channel)
+{
+    return 0;
+}
