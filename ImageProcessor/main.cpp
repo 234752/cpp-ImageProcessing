@@ -57,6 +57,9 @@ int main(int argc, char *argv[])
     auto cvarcoii_option = op.add<Value<int>>("", "cvarcoii", "calculate variation coefficient II");
     auto centropy_option = op.add<Value<int>>("", "centropy", "calculate information source entropy");
 
+    //O option
+    auto orobertsii_option = op.add<Switch>("", "orobertsii", "filter using Robert's operator II");
+
     op.parse(argc, argv);
 
     // print auto-generated help message
@@ -180,6 +183,11 @@ int main(int argc, char *argv[])
     if(cvarcoii_option->is_set()) cout<<"Variation coefficient II: "<<variationCoefficientII(inputImage, cvarcoii_option->value())<<endl;
     if(centropy_option->is_set()) cout<<"Information source entropy: "<<entropy(inputImage, centropy_option->value())<<endl;
 
+    //O option execution
+    if(orobertsii_option->is_set()) {
+        robertOperator(inputImage);
+        save = true;
+    }
 
     if(save) {
         inputImage.save("out.bmp");
