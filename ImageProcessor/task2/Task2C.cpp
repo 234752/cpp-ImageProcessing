@@ -29,11 +29,11 @@ double mean(CImg<unsigned char> &image, int channel)
 
 double variance(CImg<unsigned char> &image, int channel)
 {
-    double b = mean(image, channel);
+    double mean_val = mean(image, channel);
     double variance = 0;
     for(int i = 0; i < 256; i++)
     {
-        variance += pow(i - b, 2)*histogramValues[i];
+        variance += pow(i - mean_val, 2)*histogramValues[i];
     }
     variance /= (image.width() * image.height());
     return variance;
@@ -41,23 +41,44 @@ double variance(CImg<unsigned char> &image, int channel)
 
 double deviation(CImg<unsigned char> &image, int channel)
 {
-    double v = variance(image, channel);
-    return pow(v, 0.5);
+    double variance_val = variance(image, channel);
+    return pow(variance_val, 0.5);
 }
 
 double variationCoefficient(CImg<unsigned char> &image, int channel)
 {
-    return 0;
+    double mean_val = mean(image, channel);
+    double deviation_val = deviation(image, channel);
+    double coefficient = deviation_val / mean_val;
+    return coefficient;
 }
 
 double asymmetryCoefficient(CImg<unsigned char> &image, int channel)
 {
-    return 0;
+    double mean_val = mean(image, channel);
+    double deviation_val = deviation(image, channel);
+    double coefficient = 0;
+    for(int i = 0; i < 256; i++)
+    {
+        coefficient += pow(i - mean_val, 3)*histogramValues[i];
+    }
+    coefficient /= (image.width() * image.height());
+    coefficient /= pow(deviation_val, 3);
+    return coefficient;
 }
 
 double flatteningCoefficient(CImg<unsigned char> &image, int channel)
 {
-    return 0;
+    double mean_val = mean(image, channel);
+    double deviation_val = deviation(image, channel);
+    double coefficient = 0;
+    for(int i = 0; i < 256; i++)
+    {
+        coefficient += pow(i - mean_val, 4)*histogramValues[i];
+    }
+    coefficient /= (image.width() * image.height());
+    coefficient /= pow(deviation_val, 4);
+    return coefficient - 3;
 }
 
 double variationCoefficientII(CImg<unsigned char> &image, int channel)

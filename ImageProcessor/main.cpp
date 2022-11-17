@@ -173,12 +173,12 @@ int main(int argc, char *argv[])
     //C options execution
     if(cmean_option->is_set()) cout<<"Mean: "<<mean(inputImage, cmean_option->value())<<endl;
     if(cvariance_option->is_set()) cout<<"Variance: "<<variance(inputImage, cvariance_option->value())<<endl;
-    if(cstdev_option->is_set()) cout<<"Variance: "<<deviation(inputImage, cstdev_option->value())<<endl;
-    if(cvarcoi_option->is_set()) cout<<"Variance: "<<variationCoefficient(inputImage, cvarcoi_option->value())<<endl;
-    if(casyco_option->is_set()) cout<<"Variance: "<<asymmetryCoefficient(inputImage, casyco_option->value())<<endl;
-    if(cfsyco_option->is_set()) cout<<"Variance: "<<flatteningCoefficient(inputImage, cfsyco_option->value())<<endl;
-    if(cvarcoii_option->is_set()) cout<<"Variance: "<<variationCoefficientII(inputImage, cvarcoii_option->value())<<endl;
-    if(centropy_option->is_set()) cout<<"Variance: "<<entropy(inputImage, centropy_option->value())<<endl;
+    if(cstdev_option->is_set()) cout<<"Standard deviation: "<<deviation(inputImage, cstdev_option->value())<<endl;
+    if(cvarcoi_option->is_set()) cout<<"Variation coefficient: "<<variationCoefficient(inputImage, cvarcoi_option->value())<<endl;
+    if(casyco_option->is_set()) cout<<"Asymmetry coefficient: "<<asymmetryCoefficient(inputImage, casyco_option->value())<<endl;
+    if(cfsyco_option->is_set()) cout<<"Flattening coefficient: "<<flatteningCoefficient(inputImage, cfsyco_option->value())<<endl;
+    if(cvarcoii_option->is_set()) cout<<"Variation coefficient II: "<<variationCoefficientII(inputImage, cvarcoii_option->value())<<endl;
+    if(centropy_option->is_set()) cout<<"Information source entropy: "<<entropy(inputImage, centropy_option->value())<<endl;
 
 
     if(save) {
