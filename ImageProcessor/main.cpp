@@ -47,6 +47,9 @@ int main(int argc, char *argv[])
     auto histogram_option = op.add<Value<int>>("", "histogram", "produce histogram");
     auto hhyper_option = op.add<Value<int>>("", "hhyper", "apply hyperbolic pdf");
 
+    //C options
+    auto mean_option = op.add<Value<int>>("", "cmean", "calculate mean");
+
     op.parse(argc, argv);
 
     // print auto-generated help message
@@ -159,6 +162,9 @@ int main(int argc, char *argv[])
             std::cout << "Chanel value has to be between 0 and 2\n";
         }
     }
+
+    //C options execution
+    if(mean_option->is_set()) cout<<"Mean: "<<mean(inputImage, mean_option->value())<<endl;
 
     if(save) {
         inputImage.save("out.bmp");
