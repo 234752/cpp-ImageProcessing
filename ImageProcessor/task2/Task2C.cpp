@@ -1,3 +1,4 @@
+#include<math.h>
 
 using namespace cimg_library;
 
@@ -83,10 +84,26 @@ double flatteningCoefficient(CImg<unsigned char> &image, int channel)
 
 double variationCoefficientII(CImg<unsigned char> &image, int channel)
 {
-    return 0;
+    fillHistogramValues(image, channel);
+    double coefficient = 0;
+    for(int i = 0; i < 256; i++)
+    {
+        coefficient += pow(histogramValues[i], 2);
+    }
+    coefficient /= pow(image.width() * image.height(), 2);
+    return coefficient;
 }
 
 double entropy(CImg<unsigned char> &image, int channel)
 {
-    return 0;
+    fillHistogramValues(image, channel);
+    double image_size = image.width() * image.height() * 1.0;
+    double entropy_val = 0;
+    for(int i = 0; i < 256; i++)
+    {
+        if(histogramValues[i] != 0) //avoid log2 = -infinity
+        entropy_val += histogramValues[i] * log2(histogramValues[i]/image_size);
+    }
+    entropy_val /= image_size;
+    return -entropy_val;
 }
