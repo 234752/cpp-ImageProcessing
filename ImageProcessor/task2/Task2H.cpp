@@ -112,6 +112,7 @@ void hhyperPDF(CImg<unsigned char> &image, int channel, int min, int max)
 }
 
 //histogram performed on an image
+// I think this is correct --hhyper
 void hyperPDF(CImg<unsigned char> &image, int channel, int min, int max)
 {
     CImg<unsigned char> newImage = image;
