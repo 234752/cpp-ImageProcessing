@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
             std::cin >> min;
             std::cout << "Maximal colour value: ";
             std::cin >> max;
-            hyperbolicPDF(inputImage, hhyper_option -> value(), min, max);
+            hyperPDF(inputImage, hhyper_option -> value(), min, max);
         } else {
             std::cout << "Chanel value has to be between 0 and 2\n";
         }
