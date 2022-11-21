@@ -28,12 +28,8 @@ void histogram(CImg<unsigned char> &image, int channel)
     {
         for (unsigned int y = 0; y < values[x]; y++)
         {
-            histogramImage(2 * x, 255 - y, 0) = 255;
-            histogramImage(2 * x + 1, 255 - y, 0) = 255;
-            histogramImage(2 * x, 255 - y, 1) = 255;
-            histogramImage(2 * x + 1, 255 - y, 1) = 255;
-            histogramImage(2 * x, 255 - y, 2) = 255;
-            histogramImage(2 * x + 1, 255 - y, 2) = 255;
+            histogramImage(2 * x, 255 - y, channel) = 255;
+            histogramImage(2 * x + 1, 255 - y, channel) = 255;
         }
     }
     histogramImage.save("histogram.bmp");
