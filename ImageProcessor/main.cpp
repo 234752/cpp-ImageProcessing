@@ -57,6 +57,9 @@ int main(int argc, char *argv[])
     auto cvarcoii_option = op.add<Value<int>>("", "cvarcoii", "calculate variation coefficient II");
     auto centropy_option = op.add<Value<int>>("", "centropy", "calculate information source entropy");
 
+    //S options
+    auto slowpass_option = op.add<Value<int>>("", "slowpass", "filter image using low pass filter");
+    auto solowpass_option = op.add<Switch>("", "solowpass", "filter image using optimised low pass filter");
     //O option
     auto orobertsii_option = op.add<Switch>("", "orobertsii", "filter using Robert's operator II");
 
@@ -182,6 +185,16 @@ int main(int argc, char *argv[])
     if(cfsyco_option->is_set()) cout<<"Flattening coefficient: "<<flatteningCoefficient(inputImage, cfsyco_option->value())<<endl;
     if(cvarcoii_option->is_set()) cout<<"Variation coefficient II: "<<variationCoefficientII(inputImage, cvarcoii_option->value())<<endl;
     if(centropy_option->is_set()) cout<<"Information source entropy: "<<entropy(inputImage, centropy_option->value())<<endl;
+
+    //S options execution
+    if(slowpass_option->is_set()) {
+        inputImage = lowPassFilter(inputImage);
+        save = true;
+    }
+    if(solowpass_option->is_set()) {
+        inputImage = optimisedLowPassFilter(inputImage);
+        save = true;
+    }
 
     //O option execution
     if(orobertsii_option->is_set()) {
