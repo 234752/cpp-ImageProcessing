@@ -1,4 +1,3 @@
-#include<math.h>
 
 using namespace cimg_library;
 
