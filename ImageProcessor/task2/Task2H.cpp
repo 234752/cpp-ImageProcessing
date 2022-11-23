@@ -34,9 +34,8 @@ void histogram(CImg<unsigned char> &image, int channel)
     histogramImage.save("histogram.bmp");
 }
 
-//histogram performed on an image
-// I think this is correct --hhyper
-void hyperPDF(CImg<unsigned char> &image, int channel, int min, int max)
+//works for grayscale images
+void hyperPDF(CImg<unsigned char> &image, int min, int max)
 {
     CImg<unsigned char> newImage = image;
     unsigned int values[256];
@@ -53,7 +52,7 @@ void hyperPDF(CImg<unsigned char> &image, int channel, int min, int max)
     }
     for (unsigned int x = 0; x < image.width(); x++) {
         for (unsigned int y = 0; y < image.height(); y++) {
-            values[image(x, y, channel)]++;
+            values[image(x, y, 0)]++;
         }
     }
 
@@ -61,7 +60,7 @@ void hyperPDF(CImg<unsigned char> &image, int channel, int min, int max)
     {
         for (unsigned int y = 0; y < newImage.height(); y++)
         {
-            unsigned int sum = std::accumulate(values, values + image(x, y, channel), 0);
+            unsigned int sum = std::accumulate(values, values + image(x, y, 0), 0);
             newImage(x, y, 0) = minF * (pow((float)max / minF, ((float) sum / (float) size)));
             newImage(x, y, 1) = minF * (pow((float)max / minF, ((float) sum / (float) size)));
             newImage(x, y, 2) = minF * (pow((float)max / minF, ((float) sum / (float) size)));

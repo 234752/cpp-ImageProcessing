@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
     //H options
     auto histogram_option = op.add<Value<int>>("", "histogram", "produce histogram");
-    auto hhyper_option = op.add<Value<int>>("", "hhyper", "apply hyperbolic pdf");
+    auto hhyper_option = op.add<Switch>("", "hhyper", "apply hyperbolic pdf");
 
     //C options
     auto cmean_option = op.add<Value<int>>("", "cmean", "calculate mean");
@@ -163,17 +163,13 @@ int main(int argc, char *argv[])
         }
     }
     if (hhyper_option -> is_set()) {
-        if (hhyper_option -> value() >= 0 && hhyper_option -> value() <= 2) {
             //there could be a better way to get min and max
             int min, max;
             std::cout << "Minimal colour value: ";
             std::cin >> min;
             std::cout << "Maximal colour value: ";
             std::cin >> max;
-            hyperPDF(inputImage, hhyper_option -> value(), min, max);
-        } else {
-            std::cout << "Chanel value has to be between 0 and 2\n";
-        }
+            hyperPDF(inputImage, min, max);
     }
 
     //C options execution
@@ -188,7 +184,15 @@ int main(int argc, char *argv[])
 
     //S options execution
     if(slowpass_option->is_set()) {
-        inputImage = lowPassFilter(inputImage);
+        vector<int> mask;
+        int maskValue;
+        for(int i = 0; i < pow(2 * slowpass_option -> value() + 1, 2); i++) {
+            cout << "Mask (" << i / (2 * slowpass_option -> value() + 1) + 1 << ", "
+                 << i % (2 * slowpass_option -> value() + 1) + 1 << ") : ";
+            cin >> maskValue;
+            mask.push_back(maskValue);
+        }
+        inputImage = lowPassFilter(inputImage, slowpass_option->value(), mask);
         save = true;
     }
     if(solowpass_option->is_set()) {
