@@ -2,6 +2,7 @@ using namespace cimg_library;
 
 CImg<unsigned char> lowPassFilter(CImg<unsigned char> &image, int m, std::vector<int> h) {
     CImg<unsigned char> newImage = image;
+    unsigned int maskSum = std::accumulate(h.begin(), h.end(), 0);
     for (unsigned short c = 0; c < 3; c++) {
         for (unsigned x = m; x < image.width() - m; x++) {
             for (unsigned y = m; y < image.height() - m; y++) {
@@ -11,7 +12,7 @@ CImg<unsigned char> lowPassFilter(CImg<unsigned char> &image, int m, std::vector
                         sum += image(x + i, y + j, c) * h.at((i + m) * (2 * m + 1) + (j + m));
                     }
                 }
-                newImage(x, y, c) = sum / std::accumulate(h.begin(), h.end(), 0);
+                newImage(x, y, c) = sum / maskSum;
             }
         }
     }
