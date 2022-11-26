@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
         save = true;
     }
     if(contrast_option->is_set()) {
-        contrast2(inputImage, contrast_option->value());
+        contrast(inputImage, contrast_option->value());
         save = true;
     }
     if(negative_option->is_set()) {
