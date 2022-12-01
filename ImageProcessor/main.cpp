@@ -9,6 +9,8 @@
 #include "task2/Task2C.cpp"
 #include "task2/Task2S.cpp"
 #include "task2/Task2O.cpp"
+#include "task3/Task3R.cpp"
+#include "task3/Task3M.cpp"
 
 
 using namespace popl;
