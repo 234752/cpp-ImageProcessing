@@ -188,13 +188,26 @@ int main(int argc, char *argv[])
     if(slowpass_option->is_set()) {
         vector<int> mask;
         int maskValue;
+        bool nonZero = false;
         for(int i = 0; i < pow(2 * slowpass_option -> value() + 1, 2); i++) {
             cout << "Mask (" << i / (2 * slowpass_option -> value() + 1) + 1 << ", "
                  << i % (2 * slowpass_option -> value() + 1) + 1 << ") : ";
             cin >> maskValue;
-            mask.push_back(maskValue);
+            if(maskValue > 0) {
+                nonZero = true;
+                mask.push_back(maskValue);
+            } else if(maskValue == 0) {
+                mask.push_back(maskValue);
+            } else {
+                cout << "Value cannot be lower than 0\n";
+                i--;
+            }
         }
-        inputImage = lowPassFilter(inputImage, slowpass_option->value(), mask);
+        if(nonZero) {
+            inputImage = lowPassFilter(inputImage, slowpass_option->value(), mask);
+        } else {
+            cout << "All mask values cannot be equal to 0\n";
+        }
         save = true;
     }
     if(solowpass_option->is_set()) {
