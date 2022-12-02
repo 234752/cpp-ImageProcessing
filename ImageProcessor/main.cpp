@@ -68,6 +68,7 @@ int main(int argc, char *argv[])
 
     //M options - basic
     auto dilation_option = op.add<Switch>("", "dilation", "apply dilation");
+    auto erosion_option = op.add<Switch>("", "erosion", "apply erosion");
 
     op.parse(argc, argv);
 
@@ -228,6 +229,10 @@ int main(int argc, char *argv[])
     //M options execution
     if(dilation_option->is_set()) {
         dilation(inputImage);
+        save = true;
+    }
+    if(erosion_option->is_set()) {
+        erosion(inputImage);
         save = true;
     }
 
