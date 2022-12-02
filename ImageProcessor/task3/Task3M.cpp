@@ -39,7 +39,8 @@ int findMinValueInMask(CImg<unsigned char> &image, int x, int y)
     return min;
 }
 
-void dilation(CImg<unsigned char> &image) {
+void dilation(CImg<unsigned char> &image)
+{
     CImg<unsigned char> newImage = image;
 
     for (int x = 1; x < image.width()-1; x++)
@@ -55,7 +56,8 @@ void dilation(CImg<unsigned char> &image) {
     image = newImage;
 }
 
-void erosion(CImg<unsigned char> &image) {
+void erosion(CImg<unsigned char> &image)
+{
     CImg<unsigned char> newImage = image;
 
     for (int x = 1; x < image.width()-1; x++)
@@ -69,4 +71,16 @@ void erosion(CImg<unsigned char> &image) {
         }
     }
     image = newImage;
+}
+
+void opening(CImg<unsigned char> &image)
+{
+    erosion(image);
+    dilation(image);
+}
+
+void closing(CImg<unsigned char> &image)
+{
+    dilation(image);
+    erosion(image);
 }
