@@ -62,8 +62,12 @@ int main(int argc, char *argv[])
     //S options
     auto slowpass_option = op.add<Value<int>>("", "slowpass", "filter image using low pass filter");
     auto solowpass_option = op.add<Switch>("", "solowpass", "filter image using optimised low pass filter");
+
     //O option
     auto orobertsii_option = op.add<Switch>("", "orobertsii", "filter using Robert's operator II");
+
+    //M options - basic
+    auto dilation_option = op.add<Switch>("", "dilation", "apply dilation");
 
     op.parse(argc, argv);
 
@@ -218,6 +222,12 @@ int main(int argc, char *argv[])
     //O option execution
     if(orobertsii_option->is_set()) {
         robertOperator(inputImage);
+        save = true;
+    }
+
+    //M options execution
+    if(dilation_option->is_set()) {
+        dilation(inputImage);
         save = true;
     }
 
