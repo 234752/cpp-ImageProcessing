@@ -39,6 +39,22 @@ int findMinValueInMask(CImg<unsigned char> &image, int x, int y)
     return min;
 }
 
+bool checkHitOrMiss(CImg<unsigned char> &image, int x, int y)
+{
+    for(int maskX = -1; maskX<2; maskX++)
+    {
+        for(int maskY = -1; maskY<2; maskY++)
+        {
+            if(mask[maskX+1][maskY+1] == 1 && image(x + maskX , y + maskY , 0) == 0)
+            {//if mask is 1 (exists) in this spot, and image is 0 (background) return miss
+                return false;
+            }
+        }
+    }
+    //if for every spot of the mask, there was a foreground of the image, return hit
+    return true;
+}
+
 void dilation(CImg<unsigned char> &image)
 {
     CImg<unsigned char> newImage = image;
@@ -83,4 +99,23 @@ void closing(CImg<unsigned char> &image)
 {
     dilation(image);
     erosion(image);
+}
+
+void HMT(CImg<unsigned char> &image)
+{
+    CImg<unsigned char> newImage = image;
+
+    for (int x = 1; x < image.width()-1; x++)
+    {
+        for (int y = 1; y < image.height()-1; y++)
+        {
+            if(!checkHitOrMiss(image, x, y))
+            {
+                newImage(x, y, 0) = 0;
+                newImage(x, y, 1) = 0;
+                newImage(x, y, 2) = 0;
+            }
+        }
+    }
+    image = newImage;
 }

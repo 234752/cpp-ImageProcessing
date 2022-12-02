@@ -71,6 +71,7 @@ int main(int argc, char *argv[])
     auto erosion_option = op.add<Switch>("", "erosion", "apply erosion");
     auto opening_option = op.add<Switch>("", "opening", "apply opening");
     auto closing_option = op.add<Switch>("", "closing", "apply closing");
+    auto hmt_option = op.add<Switch>("", "hmt", "apply HMT transform");
 
     op.parse(argc, argv);
 
@@ -243,6 +244,10 @@ int main(int argc, char *argv[])
     }
     if(closing_option->is_set()) {
         closing(inputImage);
+        save = true;
+    }
+    if(hmt_option->is_set()) {
+        HMT(inputImage);
         save = true;
     }
 
