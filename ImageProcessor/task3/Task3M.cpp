@@ -63,6 +63,10 @@ bool checkHitOrMiss(CImg<unsigned char> &image, int x, int y)
             {//if mask is 1 (exists) in this spot, and image is 0 (background) return miss
                 return false;
             }
+            if(mask[maskX+1][maskY+1] == 0 && image(x + maskX , y + maskY , 0) == 255)
+            {//if mask is 0 (empty) in this spot, and image is 255 (foreground) return miss
+                return false;
+            }
         }
     }
     //if for every spot of the mask, there was a foreground of the image, return hit
