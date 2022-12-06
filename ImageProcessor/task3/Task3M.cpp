@@ -1,5 +1,3 @@
-#include "../lib/CImg.h"
-
 using namespace cimg_library;
 
 short mask[3][3] =
@@ -55,17 +53,25 @@ int findMinValueInMask(CImg<unsigned char> &image, int x, int y)
 
 bool checkHitOrMiss(CImg<unsigned char> &image, int x, int y)
 {
-    for(int maskX = -1; maskX<2; maskX++)
+    for(int maskX = -1; maskX < 2; maskX++)
     {
-        for(int maskY = -1; maskY<2; maskY++)
+        for(int maskY = -1; maskY < 2; maskY++)
         {
-            if(mask[maskX+1][maskY+1] != 2 && mask[maskX+1][maskY+1] != image(x + maskX , y + maskY , 0))
+            if(mask[maskX+1][maskY+1] != 2)
             {
-                return false;
+                if (mask[maskX+1][maskY+1] == 1 && image(x + maskX, y + maskY, 0) == 0) {
+                    std::cout << "\nFalse";
+                    return false;
+                }
+                if (mask[maskX+1][maskY+1] == 0 && image(x + maskX, y + maskY, 0) != 0) {
+                    std::cout << "\nFalse";
+                    return false;
+                }
             }
         }
     }
     //if for every spot of the mask, there was a foreground of the image, return hit
+    std::cout << "\n\n\nTrue\n\n";
     return true;
 }
 
@@ -123,11 +129,11 @@ void HMT(CImg<unsigned char> &image)
     {
         for (int y = 1; y < image.height()-1; y++)
         {
-            if(!checkHitOrMiss(image, x, y))
+            if(checkHitOrMiss(image, x, y))
             {
-                newImage(x, y, 0) = 0;
-                newImage(x, y, 1) = 0;
-                newImage(x, y, 2) = 0;
+                newImage(x, y, 0) = 255;
+                newImage(x, y, 1) = 255;
+                newImage(x, y, 2) = 255;
             }
         }
     }
@@ -147,18 +153,17 @@ void imageUnion(CImg<unsigned char> &image1, CImg<unsigned char> &image2) {
     {
         for (int y = 0; y < image1.height(); y++)
         {
-            if(image2(x, y, 0) == 0)
+            if(image2(x, y, 0) == 255)
             {
-                image1(x, y, 0) = 0;
-                image1(x, y, 1) = 0;
-                image1(x, y, 2) = 0;
+                image1(x, y, 0) = 255;
+                image1(x, y, 1) = 255;
+                image1(x, y, 2) = 255;
             }
         }
     }
 }
 
-// convex hull
-// otoczka wypukła <3
+// convex hull - otoczka wypukła <3
 void M4(CImg<unsigned char> &image1) {
     CImg<unsigned char> image2 = image1, image3 = image1, image4 = image1;
     changeMask(mask1);
