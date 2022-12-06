@@ -30,11 +30,6 @@ void robertOperator(CImg<unsigned char> &image)
     image = filteredImage;
 }
 
-
-int greyscale(CImg<unsigned char> &image, int x, int y) {
-    return (image(x, y, 0) + image(x, y, 1) + image(x, y, 2)) / 3;
-}
-
 void kirshOperator(CImg<unsigned char> &image) {
     CImg<unsigned char> newImage = image;
     int s;
