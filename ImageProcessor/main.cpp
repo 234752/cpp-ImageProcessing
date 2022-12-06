@@ -65,6 +65,7 @@ int main(int argc, char *argv[])
 
     //O option
     auto orobertsii_option = op.add<Switch>("", "orobertsii", "filter using Robert's operator II");
+    auto okirsf_option = op.add<Switch>("", "okirsf", "filter using Kirsh Operator");
 
     //M options - basic
     auto dilation_option = op.add<Switch>("", "dilation", "apply dilation");
@@ -226,6 +227,11 @@ int main(int argc, char *argv[])
     //O option execution
     if(orobertsii_option->is_set()) {
         robertOperator(inputImage);
+        save = true;
+    }
+
+    if(okirsf_option->is_set()) {
+        kirshOperator(inputImage);
         save = true;
     }
 

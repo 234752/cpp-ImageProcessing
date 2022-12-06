@@ -157,6 +157,8 @@ void imageUnion(CImg<unsigned char> &image1, CImg<unsigned char> &image2) {
     }
 }
 
+// convex hull
+// otoczka wypukła <3
 void M4(CImg<unsigned char> &image1) {
     CImg<unsigned char> image2 = image1, image3 = image1, image4 = image1;
     changeMask(mask1);
