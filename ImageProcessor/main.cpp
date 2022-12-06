@@ -74,6 +74,8 @@ int main(int argc, char *argv[])
     auto closing_option = op.add<Switch>("", "closing", "apply closing");
     auto hmt_option = op.add<Switch>("", "hmt", "apply HMT transform");
 
+    auto merging_option = op.add<Switch>("", "merging", "merge regions");
+
     op.parse(argc, argv);
 
     // print auto-generated help message
@@ -254,6 +256,11 @@ int main(int argc, char *argv[])
     }
     if(hmt_option->is_set()) {
         HMT(inputImage);
+        save = true;
+    }
+
+    if(merging_option->is_set()) {
+        regionMerge(inputImage);
         save = true;
     }
 
