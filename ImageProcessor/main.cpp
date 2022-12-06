@@ -73,6 +73,7 @@ int main(int argc, char *argv[])
     auto opening_option = op.add<Switch>("", "opening", "apply opening");
     auto closing_option = op.add<Switch>("", "closing", "apply closing");
     auto hmt_option = op.add<Switch>("", "hmt", "apply HMT transform");
+    auto ch_option = op.add<Switch>("", "ch", "apply convex hull");
 
     auto merging_option = op.add<Switch>("", "merging", "merge regions");
 
@@ -256,6 +257,10 @@ int main(int argc, char *argv[])
     }
     if(hmt_option->is_set()) {
         HMT(inputImage);
+        save = true;
+    }
+    if(ch_option->is_set()) {
+        M4(inputImage);
         save = true;
     }
 
