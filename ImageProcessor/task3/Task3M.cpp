@@ -60,18 +60,15 @@ bool checkHitOrMiss(CImg<unsigned char> &image, int x, int y)
             if(mask[maskX+1][maskY+1] != 2)
             {
                 if (mask[maskX+1][maskY+1] == 1 && image(x + maskX, y + maskY, 0) == 0) {
-                    std::cout << "\nFalse";
                     return false;
                 }
                 if (mask[maskX+1][maskY+1] == 0 && image(x + maskX, y + maskY, 0) != 0) {
-                    std::cout << "\nFalse";
                     return false;
                 }
             }
         }
     }
     //if for every spot of the mask, there was a foreground of the image, return hit
-    std::cout << "\n\n\nTrue\n\n";
     return true;
 }
 
@@ -164,17 +161,23 @@ void imageUnion(CImg<unsigned char> &image1, CImg<unsigned char> &image2) {
 }
 
 // convex hull - otoczka wypukła <3
-void M4(CImg<unsigned char> &image1) {
-    CImg<unsigned char> image2 = image1, image3 = image1, image4 = image1;
-    changeMask(mask1);
-    HMT(image1);
-    changeMask(mask2);
-    HMT(image2);
-    changeMask(mask3);
-    HMT(image3);
-    changeMask(mask4);
-    HMT(image4);
-    imageUnion(image1, image2);
-    imageUnion(image1, image3);
-    imageUnion(image1, image4);
+void M4(CImg<unsigned char> &image) {
+    CImg<unsigned char> image1, image2, image3, image4;
+    while (true) {
+        image1 = image, image2 = image, image3 = image, image4 = image;
+        changeMask(mask1);
+        HMT(image1);
+        changeMask(mask2);
+        HMT(image2);
+        changeMask(mask3);
+        HMT(image3);
+        changeMask(mask4);
+        HMT(image4);
+        imageUnion(image1, image2);
+        imageUnion(image1, image3);
+        imageUnion(image1, image4);
+
+        if (image == image1) break;
+        image = image1;
+    }
 }
