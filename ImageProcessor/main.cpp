@@ -75,6 +75,8 @@ int main(int argc, char *argv[])
     auto hmt_option = op.add<Switch>("", "hmt", "apply HMT transform");
     auto ch_option = op.add<Switch>("", "ch", "apply convex hull");
 
+    auto merging_option = op.add<Switch>("", "merging", "merge regions");
+
     op.parse(argc, argv);
 
     // print auto-generated help message
@@ -259,6 +261,11 @@ int main(int argc, char *argv[])
     }
     if(ch_option->is_set()) {
         M4(inputImage);
+        save = true;
+    }
+
+    if(merging_option->is_set()) {
+        regionMerge(inputImage);
         save = true;
     }
 
