@@ -176,7 +176,90 @@ void M4(CImg<unsigned char> &image) {
         imageUnion(image1, image2);
         imageUnion(image1, image3);
         imageUnion(image1, image4);
+        if (image == image1) break;
+        image = image1;
+    }
+}
 
+/* optimised convex hull algorithm */
+
+bool checkRow(CImg<unsigned char> &image, int y) {
+    for (unsigned int x = 0; x < image.width(); x++) {
+        if (image(x, y, 1) != 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool checkColumn(CImg<unsigned char> &image, int x) {
+    for (unsigned int y = 0; y < image.height(); y++) {
+        if (image(x, y, 0) != 0){
+            return true;
+        }
+    }
+    return false;
+}
+
+bool checkHM(CImg<unsigned char> &image, int x, int y, bool horizontalCheck)
+{
+    for(int maskX = -1; maskX < 2; maskX++)
+    {
+        for(int maskY = -1; maskY < 2; maskY++)
+        {
+            if(mask[maskX+1][maskY+1] != 2)
+            {
+                if (mask[maskX+1][maskY+1] == 1 && image(x + maskX, y + maskY, 0) == 0) {
+                    return false;
+                }
+                if (mask[maskX+1][maskY+1] == 0 && image(x + maskX, y + maskY, 0) != 0) {
+                    return false;
+                }
+            }
+        }
+    }
+    //check if change would make the object convex
+    if(horizontalCheck) {
+        return checkRow(image, y);
+    } else {
+        return checkColumn(image, x);
+    }
+}
+
+void oHMT(CImg<unsigned char> &image, bool horizontalCheck)
+{
+    CImg<unsigned char> newImage = image;
+
+    for (int x = 1; x < image.width()-1; x++)
+    {
+        for (int y = 1; y < image.height()-1; y++)
+        {
+            if(checkHM(image, x, y, horizontalCheck))
+            {
+                newImage(x, y, 0) = 255;
+                newImage(x, y, 1) = 255;
+                newImage(x, y, 2) = 255;
+            }
+        }
+    }
+    image = newImage;
+}
+
+void oM4(CImg<unsigned char> &image) {
+    CImg<unsigned char> image1, image2, image3, image4;
+    while (true) {
+        image1 = image, image2 = image, image3 = image, image4 = image;
+        changeMask(mask1);
+        oHMT(image1, true);
+        changeMask(mask2);
+        oHMT(image2, false);
+        changeMask(mask3);
+        oHMT(image3, true);
+        changeMask(mask4);
+        oHMT(image4, false);
+        imageUnion(image1, image2);
+        imageUnion(image1, image3);
+        imageUnion(image1, image4);
         if (image == image1) break;
         image = image1;
     }

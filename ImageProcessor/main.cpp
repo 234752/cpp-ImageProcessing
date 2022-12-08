@@ -260,7 +260,7 @@ int main(int argc, char *argv[])
         save = true;
     }
     if(ch_option->is_set()) {
-        M4(inputImage);
+        oM4(inputImage);
         save = true;
     }
 
