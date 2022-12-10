@@ -162,23 +162,37 @@ void imageUnion(CImg<unsigned char> &image1, CImg<unsigned char> &image2) {
 
 // convex hull - otoczka wypukła <3
 void M4(CImg<unsigned char> &image) {
-    CImg<unsigned char> image1, image2, image3, image4;
+    CImg<unsigned char> image1 = image, image2 = image, image3 = image, image4 = image;
+    changeMask(mask1);
     while (true) {
-        image1 = image, image2 = image, image3 = image, image4 = image;
-        changeMask(mask1);
         HMT(image1);
-        changeMask(mask2);
-        HMT(image2);
-        changeMask(mask3);
-        HMT(image3);
-        changeMask(mask4);
-        HMT(image4);
-        imageUnion(image1, image2);
-        imageUnion(image1, image3);
-        imageUnion(image1, image4);
         if (image == image1) break;
         image = image1;
     }
+    image = image2;
+    changeMask(mask2);
+    while (true) {
+        HMT(image2);
+        if (image == image2) break;
+        image = image2;
+    }
+    image = image3;
+    changeMask(mask3);
+    while (true) {
+        HMT(image3);
+        if (image == image3) break;
+        image = image3;
+    }
+    image = image4;
+    changeMask(mask4);
+    while (true) {
+        HMT(image4);
+        if (image == image4) break;
+        image = image4;
+    }
+    imageUnion(image, image1);
+    imageUnion(image, image2);
+    imageUnion(image, image3);
 }
 
 /* optimised convex hull algorithm */
@@ -246,21 +260,35 @@ void oHMT(CImg<unsigned char> &image, bool horizontalCheck)
 }
 
 void oM4(CImg<unsigned char> &image) {
-    CImg<unsigned char> image1, image2, image3, image4;
+    CImg<unsigned char> image1 = image, image2 = image, image3 = image, image4 = image;
+    changeMask(mask1);
     while (true) {
-        image1 = image, image2 = image, image3 = image, image4 = image;
-        changeMask(mask1);
         oHMT(image1, true);
-        changeMask(mask2);
-        oHMT(image2, false);
-        changeMask(mask3);
-        oHMT(image3, true);
-        changeMask(mask4);
-        oHMT(image4, false);
-        imageUnion(image1, image2);
-        imageUnion(image1, image3);
-        imageUnion(image1, image4);
         if (image == image1) break;
         image = image1;
     }
+    image = image2;
+    changeMask(mask2);
+    while (true) {
+        oHMT(image2, false);
+        if (image == image2) break;
+        image = image2;
+    }
+    image = image3;
+    changeMask(mask3);
+    while (true) {
+        oHMT(image3, true);
+        if (image == image3) break;
+        image = image3;
+    }
+    image = image4;
+    changeMask(mask4);
+    while (true) {
+        oHMT(image4, false);
+        if (image == image4) break;
+        image = image4;
+    }
+    imageUnion(image, image1);
+    imageUnion(image, image2);
+    imageUnion(image, image3);
 }
