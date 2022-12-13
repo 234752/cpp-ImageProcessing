@@ -2,50 +2,25 @@
 
 using namespace cimg_library;
 
-bool checkPixelsAround(CImg<unsigned char> image, int x, int y)
+
+
+bool checkPixelsAround(CImg<unsigned char> image, CImg<unsigned char> region, int x, int y, int allowedDiff)
 {
-    for (int xi = -1; xi < 2 && xi < image.width(); xi++)
-    {
-        for (int yi = -1; yi < 2 && yi < image.width(); yi++)
-        {
-            if(xi != 0 || yi != 0)
-            {
-                if(image(x+xi, y+yi, 0) > image(x, y, 0) - 1 && image(x+xi, y+yi, 0) < image(x, y, 0) + 1)
-                {
-                    return true;
-                }
-            }
-        }
-    }
+    if(region(x+1, y, 0) != 0 && abs(image(x+1, y, 0) - image(x,y, 0)) < allowedDiff) return true;
+    if(region(x-1, y, 0) != 0 && abs(image(x-1, y, 0) - image(x,y, 0)) < allowedDiff) return true;
+    if(region(x, y+1, 0) != 0 && abs(image(x, y+1, 0) - image(x,y, 0)) < allowedDiff) return true;
+    if(region(x, y-1, 0) != 0 && abs(image(x, y-1, 0) - image(x,y, 0)) < allowedDiff) return true;
     return false;
 }
-
-bool checkRegionAround(CImg<unsigned char> regions, int x, int y)
-{
-    for (int xi = -1; xi < 2; xi++)
-    {
-        for (int yi = -1; yi < 2; yi++)
-        {
-            if((xi != 0 || yi != 0) && regions(x+xi, y+yi, 1) != 0)
-            {
-                if(regions(x+xi, y+yi, 1) == 255)
-                {
-                    return true;
-                }
-            }
-        }
-    }
-    return false;
-}
-
 
 void regionMerge(CImg<unsigned char> &image)
 {
 
-    CImg<unsigned char> regions(image.width(), image.height(), 1, 3, 0);
-    int seedX = 100;
-    int seedY = 100;
-    regions(seedX, seedY, 1) = 255;
+    CImg<unsigned char> region(image.width(), image.height(), 1, 3, 0);
+    int seedX = 470;
+    int seedY = 180;
+    int allowedDiff = 10;
+    region(seedX, seedY, 0) = 255;
 
 
 
@@ -53,9 +28,9 @@ void regionMerge(CImg<unsigned char> &image)
     {
         for (int y = 1; y < image.height()-1; y++)
         {
-            if(regions(x,y,1) == 0 && checkRegionAround(regions, x, y) && checkPixelsAround(image, x, y))
+            if(region(x,y,0) == 0 && checkPixelsAround(image, region, x, y, allowedDiff))
             {
-                regions(x,y,1) = 255;
+                region(x,y,0) = 255;
             }
         }
     }
@@ -64,9 +39,9 @@ void regionMerge(CImg<unsigned char> &image)
     {
         for (int y = 1; y < image.height()-1; y++)
         {
-            if(regions(x,y,1) == 0 && checkRegionAround(regions, x, y) && checkPixelsAround(image, x, y))
+            if(region(x,y,0) == 0 && checkPixelsAround(image, region, x, y, allowedDiff))
             {
-                regions(x,y,1) = 255;
+                region(x,y,0) = 255;
             }
         }
     }
@@ -75,9 +50,9 @@ void regionMerge(CImg<unsigned char> &image)
     {
         for (int y = image.height()-1; y > 1; y--)
         {
-            if(regions(x,y,1) == 0 && checkRegionAround(regions, x, y) && checkPixelsAround(image, x, y))
+            if(region(x,y,0) == 0 && checkPixelsAround(image, region, x, y, allowedDiff))
             {
-                regions(x,y,1) = 255;
+                region(x,y,0) = 255;
             }
         }
     }
@@ -86,11 +61,11 @@ void regionMerge(CImg<unsigned char> &image)
     {
         for (int y = image.height()-1; y > 1; y--)
         {
-            if(regions(x,y,1) == 0 && checkRegionAround(regions, x, y) && checkPixelsAround(image, x, y))
+            if(region(x,y,0) == 0 && checkPixelsAround(image, region, x, y, allowedDiff))
             {
-                regions(x,y,1) = 255;
+                region(x,y,0) = 255;
             }
         }
     }
-    image = regions;
+    image = region;
 }
