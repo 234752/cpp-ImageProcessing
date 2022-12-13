@@ -133,7 +133,7 @@ void closing(CImg<unsigned char> &image)
 
 void HMT(CImg<unsigned char> &image)
 {
-    CImg<unsigned char> newImage = image;
+    CImg<unsigned char> newImage(image.width(), image.height(), 1, 3, 0);
 
     for (int x = 1; x < image.width()-1; x++)
     {
@@ -144,12 +144,6 @@ void HMT(CImg<unsigned char> &image)
                 newImage(x, y, 0) = 255;
                 newImage(x, y, 1) = 255;
                 newImage(x, y, 2) = 255;
-            }
-            else
-            {
-                newImage(x, y, 0) = 0;
-                newImage(x, y, 1) = 0;
-                newImage(x, y, 2) = 0;
             }
         }
     }
