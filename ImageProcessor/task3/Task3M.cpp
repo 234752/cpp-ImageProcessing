@@ -18,6 +18,19 @@ short mask3[3][3] = {{2, 2, 1},
 short mask4[3][3] = {{2, 2, 2},
                      {2, 0, 2},
                      {1, 1, 1}};
+//short mask1[3][3] = {{2, 2, 2},
+//                     {1, 0, 2},
+//                     {1, 1, 2}};
+//short mask2[3][3] = {{1, 1, 2},
+//                     {1, 0, 2},
+//                     {2, 2, 2}};
+//short mask3[3][3] = {{2, 1, 1},
+//                     {2, 0, 1},
+//                     {2, 2, 2}};
+//short mask4[3][3] = {{2, 2, 2},
+//                     {2, 0, 1},
+//                     {2, 1, 1}};
+
 
 int findMaxValueInMask(CImg<unsigned char> &image, int x, int y)
 {
@@ -132,6 +145,31 @@ void HMT(CImg<unsigned char> &image)
                 newImage(x, y, 1) = 255;
                 newImage(x, y, 2) = 255;
             }
+            else
+            {
+                newImage(x, y, 0) = 0;
+                newImage(x, y, 1) = 0;
+                newImage(x, y, 2) = 0;
+            }
+        }
+    }
+    image = newImage;
+}
+
+void uHMT(CImg<unsigned char> &image)
+{
+    CImg<unsigned char> newImage = image;
+
+    for (int x = 1; x < image.width()-1; x++)
+    {
+        for (int y = 1; y < image.height()-1; y++)
+        {
+            if(checkHitOrMiss(image, x, y))
+            {
+                newImage(x, y, 0) = 255;
+                newImage(x, y, 1) = 255;
+                newImage(x, y, 2) = 255;
+            }
         }
     }
     image = newImage;
@@ -165,28 +203,28 @@ void M4(CImg<unsigned char> &image) {
     CImg<unsigned char> image1 = image, image2 = image, image3 = image, image4 = image;
     changeMask(mask1);
     while (true) {
-        HMT(image1);
+        uHMT(image1);
         if (image == image1) break;
         image = image1;
     }
     image = image2;
     changeMask(mask2);
     while (true) {
-        HMT(image2);
+        uHMT(image2);
         if (image == image2) break;
         image = image2;
     }
     image = image3;
     changeMask(mask3);
     while (true) {
-        HMT(image3);
+        uHMT(image3);
         if (image == image3) break;
         image = image3;
     }
     image = image4;
     changeMask(mask4);
     while (true) {
-        HMT(image4);
+        uHMT(image4);
         if (image == image4) break;
         image = image4;
     }
