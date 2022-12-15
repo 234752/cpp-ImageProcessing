@@ -265,7 +265,7 @@ int main(int argc, char *argv[])
     }
 
     if(merging_option->is_set()) {
-        regionMerge(inputImage);
+        regionMerge(inputImage, 100, 100, 10);
         save = true;
     }
 
