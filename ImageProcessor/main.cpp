@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
     auto hmt_option = op.add<Switch>("", "hmt", "apply HMT transform");
     auto ch_option = op.add<Switch>("", "ch", "apply convex hull");
 
-    auto merging_option = op.add<Switch>("", "merging", "merge regions");
+    auto merging_option = op.add<Value<int>>("", "merging", "merge regions", 10);
 
     op.parse(argc, argv);
 
@@ -265,7 +265,12 @@ int main(int argc, char *argv[])
     }
 
     if(merging_option->is_set()) {
-        regionMerge(inputImage, 100, 100, 10);
+        int x, y;
+        std::cout<<"\nX coordinate of starting pixel: ";
+        std::cin>>x;
+        std::cout<<"\nY coordinate of starting pixel: ";
+        std::cin>>y;
+        regionMerge(inputImage, x, y, merging_option->value());
         save = true;
     }
 
