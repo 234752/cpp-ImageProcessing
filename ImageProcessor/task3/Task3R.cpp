@@ -31,7 +31,7 @@ void regionMerge(CImg<unsigned char> &image, int seedX, int seedY, int allowedDi
         {
             int X = border[i].x;
             int Y = border[i].y;
-            if(X>0 && X<image.width() && Y>0 && Y<image.height())
+            if(X>0 && X<image.width()-1 && Y>0 && Y<image.height()-1)
             {
                 if (region(X + 1, Y, 0) == 0 && abs(image(X + 1, Y, 0) - image(X, Y, 0)) < allowedDiff)
                 {
