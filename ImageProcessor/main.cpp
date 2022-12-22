@@ -11,6 +11,7 @@
 #include "task2/Task2O.cpp"
 #include "task3/Task3R.cpp"
 #include "task3/Task3M.cpp"
+#include "task4/Task4T.cpp"
 
 
 using namespace popl;
@@ -67,7 +68,7 @@ int main(int argc, char *argv[])
     auto orobertsii_option = op.add<Switch>("", "orobertsii", "filter using Robert's operator II");
     auto okirsf_option = op.add<Switch>("", "okirsf", "filter using Kirsh Operator");
 
-    //M options - basic
+    //M options
     auto dilation_option = op.add<Switch>("", "dilation", "apply dilation");
     auto erosion_option = op.add<Switch>("", "erosion", "apply erosion");
     auto opening_option = op.add<Switch>("", "opening", "apply opening");
@@ -75,7 +76,13 @@ int main(int argc, char *argv[])
     auto hmt_option = op.add<Switch>("", "hmt", "apply HMT transform");
     auto ch_option = op.add<Switch>("", "ch", "apply convex hull");
 
+    //R option
     auto merging_option = op.add<Value<int>>("", "merging", "merge regions", 10);
+
+    //T options
+    auto dft_option = op.add<Switch>("", "dft", "discrete Fourier transform (slow)");
+    auto fft_option = op.add<Switch>("", "fft", "fast Fourier transform (spatial domain)");
+    auto ifft_option = op.add<Switch>("", "ifft", "inverse fast Fourier transform");
 
     op.parse(argc, argv);
 
@@ -264,6 +271,7 @@ int main(int argc, char *argv[])
         save = true;
     }
 
+    //R option execution
     if(merging_option->is_set()) {
         int x, y;
         std::cout<<"\nX coordinate of starting pixel: ";
@@ -271,6 +279,20 @@ int main(int argc, char *argv[])
         std::cout<<"\nY coordinate of starting pixel: ";
         std::cin>>y;
         regionMerge(inputImage, x, y, merging_option->value());
+        save = true;
+    }
+
+    //T options execution
+    if(dft_option->is_set()) {
+        DFT(inputImage);
+        save = true;
+    }
+    if(fft_option->is_set()) {
+        FFT(inputImage);
+        save = true;
+    }
+    if(ifft_option->is_set()) {
+        IFFT(inputImage);
         save = true;
     }
 
