@@ -24,7 +24,28 @@ std::vector<std::complex<double>> linearDFT(std::vector<std::complex<double>> se
 
 void DFT(CImg<unsigned char> &image)
 {
+    CImg<unsigned char> transformed = image;
 
+    int M = image.width();
+    int N = image.height();
+    for (int u = 0; u < M; u++)
+    {
+        for (int v = 0; v < N; v++)
+        {
+            int result = 0;
+            for (int x = 0; x < M; x++)
+            {
+                for (int y = 0; y < N; y++)
+                {
+                    result += ((std::complex<double>)image(x, y, 0) * exp(-I * 2.0 * M_PI * (double)u * (double)x / (double)M) * exp(-I * 2.0 * M_PI * (double)v * (double)y / (double)N)).real();
+                }
+            }
+            transformed(u, v, 0) = result;
+            transformed(u, v, 1) = result;
+            transformed(u, v, 2) = result;
+        }
+    }
+    image = transformed;
 }
 void FFT(CImg<unsigned char> &image) {}
 void IFFT(CImg<unsigned char> &image) {}
