@@ -284,16 +284,6 @@ int main(int argc, char *argv[])
 
     //T options execution
     if(dft_option->is_set()) {
-//        CImg<unsigned char> inputImage2(3, 3, 1, 3, 0);
-//        inputImage(0,0,0) =100;
-//        inputImage(1,0,0) =150;
-//        inputImage(2,0,0) =200;
-//        inputImage(0,1,0) =120;
-//        inputImage(1,1,0) =180;
-//        inputImage(2,1,0) =220;
-//        inputImage(0,2,0) =140;
-//        inputImage(1,2,0) =210;
-//        inputImage(2,2,0) =240;
         DFT(inputImage);
         save = true;
     }

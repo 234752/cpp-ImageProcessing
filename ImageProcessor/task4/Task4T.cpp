@@ -22,13 +22,10 @@ std::vector<std::complex<double>> linearDFT(std::vector<std::complex<double>> se
         }
     }
 }
-void DFT(CImg<unsigned char> &image)
-{
-    CImg<unsigned char> transformed(image.width(), image.height(), 1, 3, 0);
 
-    int M = image.width();
-    int N = image.height();
-    vector<vector<complex<double>>> dft(M, vector<complex<double>>(N));
+vector<vector<complex<double>>> matrixDFT(vector<vector<complex<double>>> inputMatrix, int M, int N, int inverseCoefficient) { //coefficient: -1 for DFT, 1 for inverse DFT
+
+    vector<vector<complex<double>>> outputMatrix(M, vector<complex<double>>(N));
 
     for (int u = 0; u < M; u++) {
         for (int v = 0; v < N; v++) {
@@ -40,36 +37,35 @@ void DFT(CImg<unsigned char> &image)
 
                     double angle = 2 * M_PI * (u * x) / M + 2 * M_PI * (v * y) / N;
                     double factor = sqrt(N * M);
-                    sum += exp(-I * angle) * (double)image(x, y, 0) / factor;
+                    sum += exp((double)inverseCoefficient * I * angle) * inputMatrix[x][y] / factor;
                 }
             }
 
             cout<<u<<" "<<v<<" "<<sum.real()<<" "<<sum.imag()<<endl;
-            dft[u][v] = sum;
+            outputMatrix[u][v] = sum;
         }
     }
+    return outputMatrix;
+}
 
-    for(int i=0; i<M; i++)
-    {
-        for(int j=0; j<N; j++)
-        {
-            transformed(i,j,0) = dft[i][j].real();
-            transformed(i,j,1) = dft[i][j].real();
-            transformed(i,j,2) = dft[i][j].real();
-        }
-    }
-    transformed.save("real_domain.bmp");
+void DFT(CImg<unsigned char> &image)
+{
+    CImg<unsigned char> transformed(image.width(), image.height(), 1, 3, 0);
 
-    for(int i=0; i<M; i++)
+    int M = image.width();
+    int N = image.height();
+    vector<vector<complex<double>>> matrix(M, vector<complex<double>>(N));
+
+
+    for(int x=0; x < M; x++)
     {
-        for(int j=0; j<N; j++)
+        for(int y=0; y < N; y++)
         {
-            transformed(i,j,0) = dft[i][j].imag();
-            transformed(i,j,1) = dft[i][j].imag();
-            transformed(i,j,2) = dft[i][j].imag();
+            matrix[x][y] = image(x, y, 0);
         }
     }
-    transformed.save("imag_domain.bmp");
+    vector<vector<complex<double>>> dft = matrixDFT(matrix, M, N, -1);
+    dft = matrixDFT(dft, M, N, 1);
 
     for(int i=0; i<M; i++)
     {
@@ -83,7 +79,6 @@ void DFT(CImg<unsigned char> &image)
         }
     }
     transformed.save("both_domains.bmp");
-
 }
 
 void FFT(CImg<unsigned char> &image) {}
