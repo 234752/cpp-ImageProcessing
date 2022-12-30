@@ -25,22 +25,28 @@ std::vector<std::complex<double>> linearDFT(std::vector<std::complex<double>> se
 void DFT(CImg<unsigned char> &image)
 {
     CImg<unsigned char> transformed(image.width(), image.height(), 1, 3, 0);
-    int N = image.width();
 
-        vector<vector<complex<double>>> dft(N, vector<complex<double>>(N));
+    int M = image.width();
+    int N = image.height();
 
-        for (int u = 0; u < N; u++) {
+        vector<vector<complex<double>>> dft(M, vector<complex<double>>(N));
+
+        for (int u = 0; u < M; u++) {
             for (int v = 0; v < N; v++) {
 
                 complex<double> sum(0, 0);
 
-                for (int i = 0; i < N; i++) {
-                    for (int j = 0; j < N; j++) {
+                for (int x = 0; x < M; x++) {
+                    for (int y = 0; y < N; y++) {
 
-                        double cosine = cos(2 * M_PI * (u * i + v * j) / N);
-                        double sine = sin(2 * M_PI * (u * i + v * j) / N);
-                        complex<double> term(cosine, -sine);
-                        sum += term * (double)image(i,j,0) / (double)N;
+                        double angle = 2 * M_PI * (u * x) / M + 2 * M_PI * (v * y) / N;
+                        //Eulers formula
+                        double real = cos(angle);
+                        double imag = -sin(angle);
+
+                        complex<double> e(real, imag);
+                        double factor = sqrt(N * M);
+                        sum += e * (double)image(x, y, 0) / factor;
                     }
                 }
 
@@ -49,7 +55,7 @@ void DFT(CImg<unsigned char> &image)
             }
         }
 
-    for(int i=0; i<N; i++)
+    for(int i=0; i<M; i++)
     {
         for(int j=0; j<N; j++)
         {
@@ -60,7 +66,7 @@ void DFT(CImg<unsigned char> &image)
     }
     transformed.save("real_domain.bmp");
 
-    for(int i=0; i<N; i++)
+    for(int i=0; i<M; i++)
     {
         for(int j=0; j<N; j++)
         {
@@ -71,7 +77,7 @@ void DFT(CImg<unsigned char> &image)
     }
     transformed.save("imag_domain.bmp");
 
-    for(int i=0; i<N; i++)
+    for(int i=0; i<M; i++)
     {
         for(int j=0; j<N; j++)
         {
