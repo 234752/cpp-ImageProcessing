@@ -50,15 +50,26 @@ void DFT(CImg<unsigned char> &image)
     }
     matrixDFT(dft, M, N, -1);
 
-    for(int i=0; i<M; i++)
+    int maxValue = 0;
+    for(int x=0; x < M; x++)
     {
-        for(int j=0; j<N; j++)
+        for(int y=0; y < N; y++)
         {
-            int value = pow(pow(dft[i][j].imag(),2) + pow(dft[i][j].real(),2), 0.5);
-            transformed(i,j,0) = value;
-            transformed(i,j,1) = value;
-            transformed(i,j,2) = value;
-            std::cout<<i<<" "<<j<<" "<<value<<endl;
+            int value = log(1+ pow(pow(dft[x][y].imag(), 2) + pow(dft[x][y].real(), 2), 0.5));
+            if(value > maxValue) maxValue = value;
+        }
+    }
+    for(int x=0; x < M; x++)
+    {
+        for(int y=0; y < N; y++)
+        {
+            int value = log(1+ pow(pow(dft[x][y].imag(), 2) + pow(dft[x][y].real(), 2), 0.5));
+            value *= 255;
+            value /= maxValue;
+            transformed(x, y, 0) = value;
+            transformed(x, y, 1) = value;
+            transformed(x, y, 2) = value;
+            std::cout << x << " " << y << "  " << dft[x][y].real() << " " << dft[x][y].imag() << "  " << value << endl;
         }
     }
     transformed.save("DFT.bmp");
@@ -92,7 +103,7 @@ void linearFFT(vector<complex<double>> &x, int inverseCoefficient) {
     }
 }
 
-void matrixFFT(vector<vector<complex<double>>> &inputMatrix, int inverseCoefficient) {
+void matrixFFT(vector<vector<complex<double>>> &inputMatrix, int inverseCoefficient) { //coefficient: -1 for FFT, 1 for inverse FFT
     int rows = inputMatrix.size();
     int cols = inputMatrix[0].size();
 
@@ -137,25 +148,25 @@ void FFT(CImg<unsigned char> &image) {
 
 
     int maxValue = 0;
-    for(int i=0; i<N; i++)
+    for(int x=0; x < N; x++)
     {
-        for(int j=0; j<N; j++)
+        for(int y=0; y < N; y++)
         {
-            int value = log(1+ pow(pow(fft[i][j].imag(),2) + pow(fft[i][j].real(),2), 0.5));
+            int value = log(1+ pow(pow(fft[x][y].imag(), 2) + pow(fft[x][y].real(), 2), 0.5));
             if(value > maxValue) maxValue = value;
         }
     }
-    for(int i=0; i<N; i++)
+    for(int x=0; x < N; x++)
     {
-        for(int j=0; j<N; j++)
+        for(int y=0; y < N; y++)
         {
-            int value = log(1+ pow(pow(fft[i][j].imag(),2) + pow(fft[i][j].real(),2), 0.5));
+            int value = log(1+ pow(pow(fft[x][y].imag(), 2) + pow(fft[x][y].real(), 2), 0.5));
             value *= 255;
             value /= maxValue;
-            transformed(i,j,0) = value;
-            transformed(i,j,1) = value;
-            transformed(i,j,2) = value;
-            std::cout<<i<<" "<<j<<"  "<<fft[i][j].real()<<" "<<fft[i][j].imag()<<"  "<<value<<endl;
+            transformed(x, y, 0) = value;
+            transformed(x, y, 1) = value;
+            transformed(x, y, 2) = value;
+            std::cout << x << " " << y << "  " << fft[x][y].real() << " " << fft[x][y].imag() << "  " << value << endl;
         }
     }
     transformed.save("FFT.bmp");
