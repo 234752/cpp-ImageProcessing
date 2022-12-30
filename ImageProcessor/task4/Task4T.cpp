@@ -40,11 +40,11 @@ void DFT(CImg<unsigned char> &image)
                         double cosine = cos(2 * M_PI * (u * i + v * j) / N);
                         double sine = sin(2 * M_PI * (u * i + v * j) / N);
                         complex<double> term(cosine, -sine);
-                        sum += term * (double)image(i,j,0);
+                        sum += term * (double)image(i,j,0) / (double)N;
                     }
                 }
 
-                cout<<u<<" "<<v<<endl;
+                cout<<u<<" "<<v<<" "<<sum.real()<<" "<<sum.imag()<<endl;
                 dft[u][v] = sum;
             }
         }
@@ -71,39 +71,19 @@ void DFT(CImg<unsigned char> &image)
     }
     transformed.save("imag_domain.bmp");
 
-}
-
-void DFT2(CImg<unsigned char> &image)
-{
-
-    CImg<unsigned char> transformed(image.width(), image.height(), 1, 3, 0);
-    std::vector<std::complex<double>> results = std::vector<std::complex<double>>();
-
-    int M = image.width();
-    int N = image.height();
-
-    for (int u = 0; u < M; u++)
+    for(int i=0; i<N; i++)
     {
-        for (int v = 0; v < N; v++)
+        for(int j=0; j<N; j++)
         {
-
-            for (int x = 0; x < M; x++)
-            {
-                for (int y = 0; y < N; y++)
-                {
-                    results.push_back(((std::complex<double>)image(x, y, 0) * exp(-I * 2.0 * M_PI * (double)u * (double)x / (double)M) * exp(-I * 2.0 * M_PI * (double)v * (double)y / (double)N))/pow(N*M,0.5));
-                }
-            }
-
+            int value = pow(pow(dft[i][j].imag(),2) + pow(dft[i][j].real(),2), 0.5);
+            transformed(i,j,0) = value;
+            transformed(i,j,1) = value;
+            transformed(i,j,2) = value;
+            std::cout<<i<<" "<<j<<" "<<value<<endl;
         }
     }
-    for(int i=0; i<results.size(); i++)
-    {
-        transformed(results[i].real(), results[i].imag(), 0) += 1;
-        transformed(results[i].real(), results[i].imag(), 1) += 1;
-        transformed(results[i].real(), results[i].imag(), 2) += 1;
-    }
-    image = transformed;
+    transformed.save("both_domains.bmp");
+
 }
 
 void FFT(CImg<unsigned char> &image) {}
