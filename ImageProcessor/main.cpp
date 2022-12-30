@@ -292,7 +292,7 @@ int main(int argc, char *argv[])
         save = true;
     }
     if(ifft_option->is_set()) {
-        IFFT(inputImage);
+        //IFFT(inputImage);
         save = true;
     }
 

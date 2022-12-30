@@ -4,26 +4,9 @@
 using namespace cimg_library;
 using namespace std;
 
-
 const std::complex<double> I(0, 1);
 
-std::vector<std::complex<double>> linearDFT(std::vector<std::complex<double>> sequence) //SLOW
-{
-
-    std::vector<std::complex<double>> outputSequence = std::vector<std::complex<double>>();
-    int N = sequence.size();
-
-    for (int k = 0; k < N; k++)
-    {
-        outputSequence.push_back(std::complex<double>(0, 0));
-        for (int n = 0; n < N; n++)
-        {
-            outputSequence[k] += sequence[n] * exp(-I * 2.0 * M_PI * (double)k * (double)n / (double)N);
-        }
-    }
-}
-
-vector<vector<complex<double>>> matrixDFT(vector<vector<complex<double>>> inputMatrix, int M, int N, int inverseCoefficient) { //coefficient: -1 for DFT, 1 for inverse DFT
+void matrixDFT(vector<vector<complex<double>>> &inputMatrix, int M, int N, int inverseCoefficient) { //coefficient: -1 for DFT, 1 for inverse DFT
 
     vector<vector<complex<double>>> outputMatrix(M, vector<complex<double>>(N));
 
@@ -46,7 +29,7 @@ vector<vector<complex<double>>> matrixDFT(vector<vector<complex<double>>> inputM
         }
         cout<<u<<endl;
     }
-    return outputMatrix;
+    inputMatrix = outputMatrix;
 }
 
 void DFT(CImg<unsigned char> &image)
@@ -55,18 +38,17 @@ void DFT(CImg<unsigned char> &image)
 
     int M = image.width();
     int N = image.height();
-    vector<vector<complex<double>>> matrix(M, vector<complex<double>>(N));
+    vector<vector<complex<double>>> dft(M, vector<complex<double>>(N));
 
 
     for(int x=0; x < M; x++)
     {
         for(int y=0; y < N; y++)
         {
-            matrix[x][y] = image(x, y, 0);
+            dft[x][y] = image(x, y, 0);
         }
     }
-    vector<vector<complex<double>>> dft = matrixDFT(matrix, M, N, -1);
-    //dft = matrixDFT(dft, M, N, 1);
+    matrixDFT(dft, M, N, -1);
 
     for(int i=0; i<M; i++)
     {
@@ -79,10 +61,10 @@ void DFT(CImg<unsigned char> &image)
             std::cout<<i<<" "<<j<<" "<<value<<endl;
         }
     }
-    transformed.save("both_domains.bmp");
+    transformed.save("DFT.bmp");
 }
 
-void linearFFT(vector<complex<double>> &x, int inverse) {
+void linearFFT(vector<complex<double>> &x, int inverseCoefficient) {
 
     int n = x.size();
 
@@ -97,10 +79,10 @@ void linearFFT(vector<complex<double>> &x, int inverse) {
         odd[i] = x[2 * i + 1];
     }
 
-    linearFFT(even, inverse);
-    linearFFT(odd, inverse);
+    linearFFT(even, inverseCoefficient);
+    linearFFT(odd, inverseCoefficient);
 
-    double angle = 2 * M_PI / n * (inverse ? -1 : 1);
+    double angle = 2 * M_PI / n * inverseCoefficient;
     complex<double> w(1);
     complex<double> wn(cos(angle), sin(angle));
     for (int i = 0; i < n / 2; i++) {
@@ -110,12 +92,12 @@ void linearFFT(vector<complex<double>> &x, int inverse) {
     }
 }
 
-void matrixFFT(vector<vector<complex<double>>> &inputMatrix, int inverse) {
+void matrixFFT(vector<vector<complex<double>>> &inputMatrix, int inverseCoefficient) {
     int rows = inputMatrix.size();
     int cols = inputMatrix[0].size();
 
     for (vector<complex<double>> &row : inputMatrix) {
-        linearFFT(row, inverse);
+        linearFFT(row, inverseCoefficient);
     }
 
     vector<vector<complex<double>>> transposedMatrix(cols, vector<complex<double>>(rows));
@@ -126,7 +108,7 @@ void matrixFFT(vector<vector<complex<double>>> &inputMatrix, int inverse) {
     }
 
     for (vector<complex<double>> &col : transposedMatrix) {
-        linearFFT(col, inverse);
+        linearFFT(col, inverseCoefficient);
     }
 
     for (int i = 0; i < cols; i++) {
@@ -140,18 +122,18 @@ void FFT(CImg<unsigned char> &image) {
     CImg<unsigned char> transformed(image.width(), image.height(), 1, 3, 0);
 
     int N = image.height();
-    vector<vector<complex<double>>> matrix(N, vector<complex<double>>(N));
+    vector<vector<complex<double>>> fft(N, vector<complex<double>>(N));
 
 
     for(int x=0; x < N; x++)
     {
         for(int y=0; y < N; y++)
         {
-            matrix[x][y] = image(x,y,0);
+            fft[x][y] = image(x,y,0);
         }
     }
 
-    matrixFFT(matrix, 0);
+    matrixFFT(fft, -1);
 
 
     int maxValue = 0;
@@ -159,7 +141,7 @@ void FFT(CImg<unsigned char> &image) {
     {
         for(int j=0; j<N; j++)
         {
-            int value = log(1+ pow(pow(matrix[i][j].imag(),2) + pow(matrix[i][j].real(),2), 0.5));
+            int value = log(1+ pow(pow(fft[i][j].imag(),2) + pow(fft[i][j].real(),2), 0.5));
             if(value > maxValue) maxValue = value;
         }
     }
@@ -167,15 +149,14 @@ void FFT(CImg<unsigned char> &image) {
     {
         for(int j=0; j<N; j++)
         {
-            int value = log(1+ pow(pow(matrix[i][j].imag(),2) + pow(matrix[i][j].real(),2), 0.5));
+            int value = log(1+ pow(pow(fft[i][j].imag(),2) + pow(fft[i][j].real(),2), 0.5));
             value *= 255;
             value /= maxValue;
             transformed(i,j,0) = value;
             transformed(i,j,1) = value;
             transformed(i,j,2) = value;
-            std::cout<<i<<" "<<j<<"  "<<matrix[i][j].real()<<" "<<matrix[i][j].imag()<<"  "<<value<<endl;
+            std::cout<<i<<" "<<j<<"  "<<fft[i][j].real()<<" "<<fft[i][j].imag()<<"  "<<value<<endl;
         }
     }
     transformed.save("FFT.bmp");
 }
-void IFFT(CImg<unsigned char> &image) {}
