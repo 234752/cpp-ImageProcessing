@@ -28,32 +28,26 @@ void DFT(CImg<unsigned char> &image)
 
     int M = image.width();
     int N = image.height();
+    vector<vector<complex<double>>> dft(M, vector<complex<double>>(N));
 
-        vector<vector<complex<double>>> dft(M, vector<complex<double>>(N));
+    for (int u = 0; u < M; u++) {
+        for (int v = 0; v < N; v++) {
 
-        for (int u = 0; u < M; u++) {
-            for (int v = 0; v < N; v++) {
+            complex<double> sum(0, 0);
 
-                complex<double> sum(0, 0);
+            for (int x = 0; x < M; x++) {
+                for (int y = 0; y < N; y++) {
 
-                for (int x = 0; x < M; x++) {
-                    for (int y = 0; y < N; y++) {
-
-                        double angle = 2 * M_PI * (u * x) / M + 2 * M_PI * (v * y) / N;
-                        //Eulers formula
-                        double real = cos(angle);
-                        double imag = -sin(angle);
-
-                        complex<double> e(real, imag);
-                        double factor = sqrt(N * M);
-                        sum += e * (double)image(x, y, 0) / factor;
-                    }
+                    double angle = 2 * M_PI * (u * x) / M + 2 * M_PI * (v * y) / N;
+                    double factor = sqrt(N * M);
+                    sum += exp(-I * angle) * (double)image(x, y, 0) / factor;
                 }
-
-                cout<<u<<" "<<v<<" "<<sum.real()<<" "<<sum.imag()<<endl;
-                dft[u][v] = sum;
             }
+
+            cout<<u<<" "<<v<<" "<<sum.real()<<" "<<sum.imag()<<endl;
+            dft[u][v] = sum;
         }
+    }
 
     for(int i=0; i<M; i++)
     {
