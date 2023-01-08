@@ -69,7 +69,7 @@ void DFT(CImg<unsigned char> &image)
             transformed(x, y, 0) = value;
             transformed(x, y, 1) = value;
             transformed(x, y, 2) = value;
-            std::cout << x << " " << y << "  " << dft[x][y].real() << " " << dft[x][y].imag() << "  " << value << endl;
+            //std::cout << x << " " << y << "  " << dft[x][y].real() << " " << dft[x][y].imag() << "  " << value << endl;
         }
     }
     transformed.save("DFT.bmp");
@@ -93,7 +93,7 @@ void linearFFT(vector<complex<double>> &x, int inverseCoefficient) {
     linearFFT(even, inverseCoefficient);
     linearFFT(odd, inverseCoefficient);
 
-    double angle = 2 * M_PI / n * inverseCoefficient;
+    double angle = 2 * M_PI / (double)n * (double)inverseCoefficient;
     complex<double> w(1);
     complex<double> wn(cos(angle), sin(angle));
     for (int i = 0; i < n / 2; i++) {
@@ -166,7 +166,7 @@ void FFT(CImg<unsigned char> &image) {
             transformed(x, y, 0) = value;
             transformed(x, y, 1) = value;
             transformed(x, y, 2) = value;
-            std::cout << x << " " << y << "  " << fft[x][y].real() << " " << fft[x][y].imag() << "  " << value << endl;
+            //std::cout << x << " " << y << "  " << fft[x][y].real() << " " << fft[x][y].imag() << "  " << value << endl;
         }
     }
     transformed.save("FFT.bmp");

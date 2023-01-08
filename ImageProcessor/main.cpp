@@ -11,7 +11,7 @@
 #include "task2/Task2O.cpp"
 #include "task3/Task3R.cpp"
 #include "task3/Task3M.cpp"
-#include "task4/Task4T.cpp"
+#include "task4/Task4F.cpp"
 
 
 using namespace popl;
@@ -83,6 +83,10 @@ int main(int argc, char *argv[])
     auto dft_option = op.add<Switch>("", "dft", "discrete Fourier transform (slow)");
     auto fft_option = op.add<Switch>("", "fft", "fast Fourier transform (spatial domain)");
     auto ifft_option = op.add<Switch>("", "ifft", "inverse fast Fourier transform");
+
+    //F options
+    auto lowpass_option = op.add<Value<int>>("", "lowpass", "low-pass filter, (high-cut filter)");
+
 
     op.parse(argc, argv);
 
@@ -295,6 +299,13 @@ int main(int argc, char *argv[])
         //IFFT(inputImage);
         save = true;
     }
+
+    //F options execution
+    if(lowpass_option->is_set()) {
+        lowPassFilter(inputImage, lowpass_option->value());
+        save = true;
+    }
+
 
     if(save) {
         inputImage.save("out.bmp");
