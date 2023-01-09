@@ -86,6 +86,7 @@ int main(int argc, char *argv[])
 
     //F options
     auto lowpass_option = op.add<Value<int>>("", "lowpass", "low-pass filter, (high-cut filter)");
+    auto highpass_option = op.add<Value<int>>("", "highpass", "high-pass filter, (low-cut filter)");
 
 
     op.parse(argc, argv);
@@ -303,6 +304,10 @@ int main(int argc, char *argv[])
     //F options execution
     if(lowpass_option->is_set()) {
         lowPassFilter(inputImage, lowpass_option->value());
+        save = true;
+    }
+    if(highpass_option->is_set()) {
+        highPassFilter(inputImage, highpass_option->value());
         save = true;
     }
 

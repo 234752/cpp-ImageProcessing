@@ -70,3 +70,21 @@ void lowPassFilter(CImg<unsigned char> &image, int threshold) {
 
     image = matrixToImage(lowPassed);
 }
+
+void highPassFilter(CImg<unsigned char> &image, int threshold) {
+
+    int N = image.height();
+    vector<vector<complex<double>>> highPassed = imageToMatrix(image);
+
+    matrixFFT(highPassed, -1);
+
+    for(int i=N/2-threshold; i<N/2+threshold; i++) {
+        for(int j=N/2-threshold; j<N/2+threshold; j++) {
+            highPassed[i][j] = 0;
+        }
+    }
+
+    matrixFFT(highPassed, 1);
+
+    image = matrixToImage(highPassed);
+}
