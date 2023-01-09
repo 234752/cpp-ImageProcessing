@@ -18,29 +18,42 @@ void lowPassFilter(CImg<unsigned char> &image, int threshold) {
             lowPassed[x][y] = image(x,y,0);
         }
     }
-
     matrixFFT(lowPassed, -1);
-
-    for(int i=0; i<threshold; i++) {
-        for(int j=0; j<threshold; j++) {
-            lowPassed[i][j] = 0;
-            lowPassed[N-i -1][j] = 0;
-            lowPassed[i][N-j -1] = 0;
-            lowPassed[N-i -1][N-j -1] = 0;
-        }
-    }
-
     matrixFFT(lowPassed, 1);
 
+
+
+//    for(int i=0; i<threshold; i++) {
+//        for(int j=0; j<threshold; j++) {
+//            lowPassed[i][j] = 0;
+//            lowPassed[N-i -1][j] = 0;
+//            lowPassed[i][N-j -1] = 0;
+//            lowPassed[N-i -1][N-j -1] = 0;
+//        }
+//    }
+
+    double maxValue = 0;
     for(int x=0; x < N; x++)
     {
         for(int y=0; y < N; y++)
         {
-            int value = pow(pow(lowPassed[x][y].imag(), 2) + pow(lowPassed[x][y].real(), 2), 0.5);
+            double value = pow(pow(lowPassed[x][y].imag(), 2) + pow(lowPassed[x][y].real(), 2), 0.5);
+            if(value > maxValue) maxValue = value;
+        }
+    }
+    for(int x=0; x < N; x++)
+    {
+        for(int y=0; y < N; y++)
+        {
+            double value = pow(pow(lowPassed[x][y].imag(), 2) + pow(lowPassed[x][y].real(), 2), 0.5);
+            value *= 255.0;
+            value /= maxValue;
             transformed(x, y, 0) = value;
             transformed(x, y, 1) = value;
             transformed(x, y, 2) = value;
         }
     }
+
+
     image = transformed;
 }

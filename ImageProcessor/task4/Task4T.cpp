@@ -93,14 +93,15 @@ void linearFFT(vector<complex<double>> &x, int inverseCoefficient) {
     linearFFT(even, inverseCoefficient);
     linearFFT(odd, inverseCoefficient);
 
-    double angle = 2 * M_PI / (double)n * (double)inverseCoefficient;
+    double angle = 2.0 * M_PI / (double)n * (double)inverseCoefficient;
     complex<double> w(1);
-    complex<double> wn(cos(angle), sin(angle));
+    complex<double> wn(cos(angle), -sin(angle));
     for (int i = 0; i < n / 2; i++) {
         x[i] = even[i] + w * odd[i];
         x[i + n / 2] = even[i] - w * odd[i];
         w *= wn;
     }
+
 }
 
 void matrixFFT(vector<vector<complex<double>>> &inputMatrix, int inverseCoefficient) { //coefficient: -1 for FFT, 1 for inverse FFT
@@ -145,7 +146,6 @@ void FFT(CImg<unsigned char> &image) {
     }
 
     matrixFFT(fft, -1);
-
 
     int maxValue = 0;
     for(int x=0; x < N; x++)
