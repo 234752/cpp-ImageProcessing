@@ -5,6 +5,9 @@
 using namespace cimg_library;
 using namespace std;
 
+
+
+
 void lowPassFilter(CImg<unsigned char> &image, int threshold) {
     CImg<unsigned char> transformed(image.width(), image.height(), 1, 3, 0);
 

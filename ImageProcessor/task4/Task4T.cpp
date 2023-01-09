@@ -132,6 +132,7 @@ void matrixFFT(vector<vector<complex<double>>> &inputMatrix, int inverseCoeffici
 
 void FFT(CImg<unsigned char> &image) {
     CImg<unsigned char> transformed(image.width(), image.height(), 1, 3, 0);
+    CImg<unsigned char> repositioned(image.width(), image.height(), 1, 3, 0);
 
     int N = image.height();
     vector<vector<complex<double>>> fft(N, vector<complex<double>>(N));
@@ -169,5 +170,34 @@ void FFT(CImg<unsigned char> &image) {
             //std::cout << x << " " << y << "  " << fft[x][y].real() << " " << fft[x][y].imag() << "  " << value << endl;
         }
     }
-    transformed.save("FFT.bmp");
+
+    for(int x=0; x < N /2; x++)
+    {
+        for(int y=0; y < N /2; y++)
+        {
+            int value = transformed(x, y,0);
+
+            //Q1
+            repositioned(N/2 + x, N/2 - y, 0) = value;
+            repositioned(N/2 + x, N/2 - y, 1) = value;
+            repositioned(N/2 + x, N/2 - y, 2) = value;
+
+            //Q2
+            repositioned(N/2 - x, N/2 - y, 0) = value;
+            repositioned(N/2 - x, N/2 - y, 1) = value;
+            repositioned(N/2 - x, N/2 - y, 2) = value;
+
+            //Q3
+            repositioned(N/2 - x, N/2 + y, 0) = value;
+            repositioned(N/2 - x, N/2 + y, 1) = value;
+            repositioned(N/2 - x, N/2 + y, 2) = value;
+
+            //Q4
+            repositioned(N/2 + x, N/2 + y, 0) = value;
+            repositioned(N/2 + x, N/2 + y, 1) = value;
+            repositioned(N/2 + x, N/2 + y, 2) = value;
+
+        }
+    }
+    image = repositioned;
 }
