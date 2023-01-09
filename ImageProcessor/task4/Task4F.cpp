@@ -5,22 +5,56 @@
 using namespace cimg_library;
 using namespace std;
 
-
-
-
-void lowPassFilter(CImg<unsigned char> &image, int threshold) {
-    CImg<unsigned char> transformed(image.width(), image.height(), 1, 3, 0);
+vector<vector<complex<double>>> imageToMatrix(CImg<unsigned char> image) {
 
     int N = image.height();
-    vector<vector<complex<double>>> lowPassed(N, vector<complex<double>>(N));
+    vector<vector<complex<double>>> matrix(N, vector<complex<double>>(N));
 
     for(int x=0; x < N; x++)
     {
         for(int y=0; y < N; y++)
         {
-            lowPassed[x][y] = image(x,y,0);
+            matrix[x][y] = image(x,y,0);
         }
     }
+    return matrix;
+}
+
+CImg<unsigned char> matrixToImage(vector<vector<complex<double>>> matrix) {
+
+    int N = matrix.size();
+    CImg<unsigned char> image(N, N, 1, 3, 0);
+
+    double maxValue = 0;
+    for(int x=0; x < N; x++)
+    {
+        for(int y=0; y < N; y++)
+        {
+            double value = pow(pow(matrix[x][y].imag(), 2) + pow(matrix[x][y].real(), 2), 0.5);
+            if(value > maxValue) maxValue = value;
+        }
+    }
+    for(int x=0; x < N; x++)
+    {
+        for(int y=0; y < N; y++)
+        {
+            double value = pow(pow(matrix[x][y].imag(), 2) + pow(matrix[x][y].real(), 2), 0.5);
+            value *= 255.0;
+            value /= maxValue;
+            image(x, y, 0) = value;
+            image(x, y, 1) = value;
+            image(x, y, 2) = value;
+        }
+    }
+    return image;
+}
+
+
+void lowPassFilter(CImg<unsigned char> &image, int threshold) {
+
+    int N = image.height();
+    vector<vector<complex<double>>> lowPassed = imageToMatrix(image);
+
     matrixFFT(lowPassed, -1);
 
     for(int i=0; i<threshold; i++) {
@@ -34,28 +68,5 @@ void lowPassFilter(CImg<unsigned char> &image, int threshold) {
 
     matrixFFT(lowPassed, 1);
 
-    double maxValue = 0;
-    for(int x=0; x < N; x++)
-    {
-        for(int y=0; y < N; y++)
-        {
-            double value = pow(pow(lowPassed[x][y].imag(), 2) + pow(lowPassed[x][y].real(), 2), 0.5);
-            if(value > maxValue) maxValue = value;
-        }
-    }
-    for(int x=0; x < N; x++)
-    {
-        for(int y=0; y < N; y++)
-        {
-            double value = pow(pow(lowPassed[x][y].imag(), 2) + pow(lowPassed[x][y].real(), 2), 0.5);
-            value *= 255.0;
-            value /= maxValue;
-            transformed(x, y, 0) = value;
-            transformed(x, y, 1) = value;
-            transformed(x, y, 2) = value;
-        }
-    }
-
-
-    image = transformed;
+    image = matrixToImage(lowPassed);
 }
