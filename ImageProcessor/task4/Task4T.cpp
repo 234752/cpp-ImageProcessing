@@ -27,7 +27,7 @@ void matrixDFT(vector<vector<complex<double>>> &inputMatrix, int M, int N, int i
             //cout<<u<<" "<<v<<" "<<sum.real()<<" "<<sum.imag()<<endl;
             outputMatrix[u][v] = sum;
         }
-        cout<<u<<endl;
+        //cout<<u<<endl;
     }
     inputMatrix = outputMatrix;
 }
