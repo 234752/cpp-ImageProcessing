@@ -82,12 +82,10 @@ int main(int argc, char *argv[])
     //T options
     auto dft_option = op.add<Switch>("", "dft", "discrete Fourier transform (slow)");
     auto fft_option = op.add<Switch>("", "fft", "fast Fourier transform (spatial domain)");
-    auto ifft_option = op.add<Switch>("", "ifft", "inverse fast Fourier transform");
 
     //F options
     auto lowpass_option = op.add<Value<int>>("", "lowpass", "low-pass filter, (high-cut filter)");
     auto highpass_option = op.add<Value<int>>("", "highpass", "high-pass filter, (low-cut filter)");
-
 
     op.parse(argc, argv);
 
@@ -289,28 +287,27 @@ int main(int argc, char *argv[])
 
     //T options execution
     if(dft_option->is_set()) {
-        DFT(inputImage);
+        DFT(inputImage, -1);
         save = true;
     }
     if(fft_option->is_set()) {
-        FFT(inputImage);
-        save = true;
-    }
-    if(ifft_option->is_set()) {
-        //IFFT(inputImage);
+        FFT(inputImage, -1);
         save = true;
     }
 
     //F options execution
     if(lowpass_option->is_set()) {
-        lowPassFilter(inputImage, lowpass_option->value());
+//        lowPassFilter(inputImage, lowpass_option->value());
+        CImg<unsigned char> mask = CImg("f1a.bmp");
+        applyMask(inputImage, mask);
         save = true;
     }
     if(highpass_option->is_set()) {
-        highPassFilter(inputImage, highpass_option->value());
+//        highPassFilter(inputImage, highpass_option->value());
+        CImg<unsigned char> mask = CImg("f2a.bmp");
+        applyMask(inputImage, mask);
         save = true;
     }
-
 
     if(save) {
         inputImage.save("out.bmp");

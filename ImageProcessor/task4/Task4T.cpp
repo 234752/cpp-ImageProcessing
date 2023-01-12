@@ -1,5 +1,5 @@
-#include "../lib/CImg.h"
 #include <complex>
+#include <cmath>
 
 using namespace cimg_library;
 using namespace std;
@@ -18,7 +18,7 @@ void matrixDFT(vector<vector<complex<double>>> &inputMatrix, int M, int N, int i
             for (int x = 0; x < M; x++) {
                 for (int y = 0; y < N; y++) {
 
-                    double angle = 2 * M_PI * (u * x) / M + 2 * M_PI * (v * y) / N;
+                    double angle = 2 * 3.14 * (u * x) / M + 2 * 3.14 * (v * y) / N;
                     double factor = sqrt(N * M);
                     sum += exp((double)inverseCoefficient * I * angle) * inputMatrix[x][y] / factor;
                 }
@@ -32,7 +32,7 @@ void matrixDFT(vector<vector<complex<double>>> &inputMatrix, int M, int N, int i
     inputMatrix = outputMatrix;
 }
 
-void DFT(CImg<unsigned char> &image)
+void DFT(CImg<unsigned char> &image, int inverseCoefficient)
 {
     CImg<unsigned char> transformed(image.width(), image.height(), 1, 3, 0);
 
@@ -48,7 +48,7 @@ void DFT(CImg<unsigned char> &image)
             dft[x][y] = image(x, y, 0);
         }
     }
-    matrixDFT(dft, M, N, -1);
+    matrixDFT(dft, M, N, inverseCoefficient);
 
     int maxValue = 0;
     for(int x=0; x < M; x++)
@@ -93,7 +93,7 @@ void linearFFT(vector<complex<double>> &x, int inverseCoefficient) {
     linearFFT(even, inverseCoefficient);
     linearFFT(odd, inverseCoefficient);
 
-    double angle = 2.0 * M_PI / (double)n * (double)inverseCoefficient;
+    double angle = 2.0 * 3.14 / (double)n * (double)inverseCoefficient;
     complex<double> w(1);
     complex<double> wn(cos(angle), -sin(angle));
     for (int i = 0; i < n / 2; i++) {
@@ -130,13 +130,12 @@ void matrixFFT(vector<vector<complex<double>>> &inputMatrix, int inverseCoeffici
     }
 }
 
-void FFT(CImg<unsigned char> &image) {
+void FFT(CImg<unsigned char> &image, int inverseCoefficient) {
     CImg<unsigned char> transformed(image.width(), image.height(), 1, 3, 0);
     CImg<unsigned char> repositioned(image.width(), image.height(), 1, 3, 0);
 
     int N = image.height();
     vector<vector<complex<double>>> fft(N, vector<complex<double>>(N));
-
 
     for(int x=0; x < N; x++)
     {
@@ -146,7 +145,7 @@ void FFT(CImg<unsigned char> &image) {
         }
     }
 
-    matrixFFT(fft, -1);
+    matrixFFT(fft, inverseCoefficient);
 
     int maxValue = 0;
     for(int x=0; x < N; x++)
