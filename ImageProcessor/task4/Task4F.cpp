@@ -16,19 +16,19 @@ void reposition(CImg<unsigned char> &image) {
             int q3 = image(2 * n - x, y, 0);
             int q4 = image(2 * n - x, 2 * n - y, 0);
             //Q1
-            repositioned(n + x, n - y, 0) = q4;
-            repositioned(n + x, n - y, 1) = q4;
-            repositioned(n + x, n - y, 2) = q4;
+            repositioned(n + x, n - y - 1, 0) = q4;
+            repositioned(n + x, n - y - 1, 1) = q4;
+            repositioned(n + x, n - y - 1, 2) = q4;
 
             //Q2
-            repositioned(n - x, n - y, 0) = q3;
-            repositioned(n - x, n - y, 1) = q3;
-            repositioned(n - x, n - y, 2) = q3;
+            repositioned(n - x - 1, n - y - 1, 0) = q3;
+            repositioned(n - x - 1, n - y - 1, 1) = q3;
+            repositioned(n - x - 1, n - y - 1, 2) = q3;
 
             //Q3
-            repositioned(n - x, n + y, 0) = q2;
-            repositioned(n - x, n + y, 1) = q2;
-            repositioned(n - x, n + y, 2) = q2;
+            repositioned(n - x - 1, n + y, 0) = q2;
+            repositioned(n - x - 1, n + y, 1) = q2;
+            repositioned(n - x - 1, n + y, 2) = q2;
 
             //Q4
             repositioned(n + x, n + y, 0) = q1;
