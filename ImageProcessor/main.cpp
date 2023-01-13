@@ -88,6 +88,7 @@ int main(int argc, char *argv[])
     auto highpass_option = op.add<Switch>("", "highpass", "high-pass filter, (low-cut filter)");
     auto bandpass_option = op.add<Switch>("", "bandpass", "band-pass filter");
     auto bandcut_option = op.add<Switch>("", "bandcut", "band-cut filter");
+    auto edgehighpass_option = op.add<Value<int>>("", "edgehighpass", "high-pass filter with edge detection");
 
     op.parse(argc, argv);
 
@@ -321,6 +322,21 @@ int main(int argc, char *argv[])
         reposition(mask);
         applyMask(inputImage, mask);
         save = true;
+    }
+    if(edgehighpass_option->is_set()) {
+        if(edgehighpass_option->value() == 1) {
+            CImg<unsigned char> mask = CImg(R"(..\..\img\masks\f5a.bmp)");
+            reposition(mask);
+            applyMask(inputImage, mask);
+            save = true;
+        } else if (edgehighpass_option->value() == 2) {
+            CImg<unsigned char> mask = CImg(R"(..\..\img\masks\f5b.bmp)");
+            reposition(mask);
+            applyMask(inputImage, mask);
+            save = true;
+        } else {
+            cout << "Incorrect mask option. Please choose option 1 or 2\n";
+        }
     }
 
     if(save) {
