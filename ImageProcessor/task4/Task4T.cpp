@@ -24,11 +24,8 @@ void matrixDFT(vector<vector<complex<double>>> &inputMatrix, int M, int N, int i
                     sum += exp((double)inverseCoefficient * I * angle) * inputMatrix[x][y] / factor;
                 }
             }
-
-            //cout<<u<<" "<<v<<" "<<sum.real()<<" "<<sum.imag()<<endl;
             outputMatrix[u][v] = sum;
         }
-        //cout<<u<<endl;
     }
     inputMatrix = outputMatrix;
 }
@@ -70,7 +67,6 @@ void DFT(CImg<unsigned char> &image, int inverseCoefficient)
             transformed(x, y, 0) = value;
             transformed(x, y, 1) = value;
             transformed(x, y, 2) = value;
-            //std::cout << x << " " << y << "  " << dft[x][y].real() << " " << dft[x][y].imag() << "  " << value << endl;
         }
     }
     transformed.save("DFT.bmp");
@@ -102,7 +98,6 @@ void linearFFT(vector<complex<double>> &x, int inverseCoefficient) {
         x[i + n / 2] = even[i] - w * odd[i];
         w *= wn;
     }
-
 }
 
 void matrixFFT(vector<vector<complex<double>>> &inputMatrix, int inverseCoefficient) { //coefficient: -1 for FFT, 1 for inverse FFT
@@ -167,7 +162,6 @@ void FFT(CImg<unsigned char> &image, int inverseCoefficient) {
             transformed(x, y, 0) = value;
             transformed(x, y, 1) = value;
             transformed(x, y, 2) = value;
-            //std::cout << x << " " << y << "  " << fft[x][y].real() << " " << fft[x][y].imag() << "  " << value << endl;
         }
     }
 
@@ -196,7 +190,6 @@ void FFT(CImg<unsigned char> &image, int inverseCoefficient) {
             repositioned(N/2 + x, N/2 + y, 0) = value;
             repositioned(N/2 + x, N/2 + y, 1) = value;
             repositioned(N/2 + x, N/2 + y, 2) = value;
-
         }
     }
     image = repositioned;
