@@ -1,10 +1,11 @@
-#include <complex>
 #include <cmath>
+#include <complex>
 
 using namespace cimg_library;
 using namespace std;
 
 const std::complex<double> I(0, 1);
+const double PI = 3.141592653589793238463;
 
 void matrixDFT(vector<vector<complex<double>>> &inputMatrix, int M, int N, int inverseCoefficient) { //coefficient: -1 for DFT, 1 for inverse DFT
 
@@ -18,7 +19,7 @@ void matrixDFT(vector<vector<complex<double>>> &inputMatrix, int M, int N, int i
             for (int x = 0; x < M; x++) {
                 for (int y = 0; y < N; y++) {
 
-                    double angle = 2 * 3.14 * (u * x) / M + 2 * 3.14 * (v * y) / N;
+                    double angle = 2 * PI * (u * x) / M + 2 * PI * (v * y) / N;
                     double factor = sqrt(N * M);
                     sum += exp((double)inverseCoefficient * I * angle) * inputMatrix[x][y] / factor;
                 }
@@ -93,7 +94,7 @@ void linearFFT(vector<complex<double>> &x, int inverseCoefficient) {
     linearFFT(even, inverseCoefficient);
     linearFFT(odd, inverseCoefficient);
 
-    double angle = 2.0 * 3.14 / (double)n * (double)inverseCoefficient;
+    double angle = 2.0 * PI / (double)n * (double)inverseCoefficient;
     complex<double> w(1);
     complex<double> wn(cos(angle), -sin(angle));
     for (int i = 0; i < n / 2; i++) {

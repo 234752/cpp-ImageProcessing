@@ -89,6 +89,9 @@ int main(int argc, char *argv[])
     auto bandpass_option = op.add<Switch>("", "bandpass", "band-pass filter");
     auto bandcut_option = op.add<Switch>("", "bandcut", "band-cut filter");
     auto edgehighpass_option = op.add<Value<int>>("", "edgehighpass", "high-pass filter with edge detection");
+    auto phase_option = op.add<Switch>("", "phase", "phase modifying filter");
+    auto selective_option = op.add<Switch>("", "selective", "filter image using custom mask");
+    auto mask_option = op.add<Switch>("", "mask", "visualise mask applied to transformed image");
 
     op.parse(argc, argv);
 
@@ -110,7 +113,8 @@ int main(int argc, char *argv[])
     {
         cout<<"input file does not exist, remember that first argument is name/path of input file";
     }
-    if(mse_option->is_set() || pmse_option->is_set() || snr_option->is_set() || psnr_option->is_set() || md_option->is_set())
+    if(mse_option->is_set() || pmse_option->is_set() || snr_option->is_set() || psnr_option->is_set() || md_option->is_set()
+       || mask_option->is_set() || selective_option->is_set())
     {
         try
         {
@@ -337,6 +341,25 @@ int main(int argc, char *argv[])
         } else {
             cout << "Incorrect mask option. Please choose option 1 or 2\n";
         }
+    }
+    if(phase_option->is_set()) {
+        int l, k;
+        cout << "l = ";
+        cin >> l;
+        cout << "k = ";
+        cin >> k;
+        modifyPhase(inputImage, l, k);
+        save = true;
+    }
+    if(selective_option->is_set()) {
+        reposition(originalImage);
+        applyMask(inputImage, originalImage);
+        save = true;
+    }
+    if(mask_option->is_set()) {
+        FFT(inputImage, -1);
+        showAppliedMask(inputImage, originalImage);
+        save = true;
     }
 
     if(save) {

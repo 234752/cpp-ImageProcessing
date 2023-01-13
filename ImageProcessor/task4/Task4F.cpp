@@ -114,3 +114,17 @@ void applyMask(CImg<unsigned char> &image, CImg<unsigned char> &mask) {
     matrixFFT(output, 1);
     image = matrixToImage(output);
 }
+
+void modifyPhase(CImg<unsigned char> &image, int l, int k) {
+    vector<vector<complex<double>>> mask(image.width(), vector<complex<double>>(image.height()));
+    vector<vector<complex<double>>> output = imageToMatrix(image);
+    matrixFFT(output, -1);
+    for(int i = 0; i<image.width(); i++) {
+        for(int j = 0; j<image.height(); j++) {
+            output[i][j] = output[i][j] * exp(I * (((-i * k * 2.0 * PI) / image.width()) +
+                           ((-j * l * 2.0 * PI) / image.height()) + ((k + l) * PI)));
+        }
+    }
+    matrixFFT(output, 1);
+    image = matrixToImage(output);
+}
