@@ -11,29 +11,17 @@ void reposition(CImg<unsigned char> &image) {
     {
         for (unsigned int y = 0; y < n; y++)
         {
-            int q1 = image(x, y, 0);
-            int q2 = image(x, 2 * n - y, 0);
-            int q3 = image(2 * n - x, y, 0);
-            int q4 = image(2 * n - x, 2 * n - y, 0);
-            //Q1
-            repositioned(n + x, n - y - 1, 0) = q4;
-            repositioned(n + x, n - y - 1, 1) = q4;
-            repositioned(n + x, n - y - 1, 2) = q4;
+            for(unsigned short c = 0; c < 3; c++) {
+                int q1 = image(x, y, c);
+                int q2 = image(x, 2 * n - y - 1, c);
+                int q3 = image(2 * n - x - 1, y, c);
+                int q4 = image(2 * n - x - 1, 2 * n - y - 1, c);
 
-            //Q2
-            repositioned(n - x - 1, n - y - 1, 0) = q3;
-            repositioned(n - x - 1, n - y - 1, 1) = q3;
-            repositioned(n - x - 1, n - y - 1, 2) = q3;
-
-            //Q3
-            repositioned(n - x - 1, n + y, 0) = q2;
-            repositioned(n - x - 1, n + y, 1) = q2;
-            repositioned(n - x - 1, n + y, 2) = q2;
-
-            //Q4
-            repositioned(n + x, n + y, 0) = q1;
-            repositioned(n + x, n + y, 1) = q1;
-            repositioned(n + x, n + y, 2) = q1;
+                repositioned(n + x, n + y, c) = q1;
+                repositioned(n + x, n - y - 1, c) = q2;
+                repositioned(n - x - 1, n + y, c) = q3;
+                repositioned(n - x - 1, n - y - 1, c) = q4;
+            }
         }
     }
     image = repositioned;
