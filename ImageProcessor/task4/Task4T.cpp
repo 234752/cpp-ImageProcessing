@@ -165,31 +165,22 @@ void FFT(CImg<unsigned char> &image, int inverseCoefficient) {
         }
     }
 
-    for(int x=0; x < N /2; x++)
+    unsigned int n = image.height() / 2;
+    for (unsigned int x = 0; x < n; x++)
     {
-        for(int y=0; y < N /2; y++)
+        for (unsigned int y = 0; y < n; y++)
         {
-            int value = transformed(x, y,0);
+            for(unsigned short c = 0; c < 3; c++) {
+                int q1 = transformed(x, y, c);
+                int q2 = transformed(x, 2 * n - y - 1, c);
+                int q3 = transformed(2 * n - x - 1, y, c);
+                int q4 = transformed(2 * n - x - 1, 2 * n - y - 1, c);
 
-            //Q1
-            repositioned(N/2 + x, N/2 - y, 0) = value;
-            repositioned(N/2 + x, N/2 - y, 1) = value;
-            repositioned(N/2 + x, N/2 - y, 2) = value;
-
-            //Q2
-            repositioned(N/2 - x, N/2 - y, 0) = value;
-            repositioned(N/2 - x, N/2 - y, 1) = value;
-            repositioned(N/2 - x, N/2 - y, 2) = value;
-
-            //Q3
-            repositioned(N/2 - x, N/2 + y, 0) = value;
-            repositioned(N/2 - x, N/2 + y, 1) = value;
-            repositioned(N/2 - x, N/2 + y, 2) = value;
-
-            //Q4
-            repositioned(N/2 + x, N/2 + y, 0) = value;
-            repositioned(N/2 + x, N/2 + y, 1) = value;
-            repositioned(N/2 + x, N/2 + y, 2) = value;
+                repositioned(n + x, n + y, c) = q1;
+                repositioned(n + x, n - y - 1, c) = q2;
+                repositioned(n - x - 1, n + y, c) = q3;
+                repositioned(n - x - 1, n - y - 1, c) = q4;
+            }
         }
     }
     image = repositioned;
