@@ -167,7 +167,7 @@ CImg<unsigned char> bandCutMask(CImg<unsigned char> &image, int r1, int r2) {
     return mask;
 }
 
-CImg<unsigned char> edgeMask(CImg<unsigned char> &image, int r, double s, double t) {
+CImg<unsigned char> edgeMaskA(CImg<unsigned char> &image, int r, double s, double t) {
     CImg<unsigned char> mask(image.width(), image.height(), 1, 3, 0);
     for(int i = 0; i<image.width() / 2; i++) {
         for(int j = 0; j<image.height(); j++) {
@@ -176,9 +176,9 @@ CImg<unsigned char> edgeMask(CImg<unsigned char> &image, int r, double s, double
             && i > (s - t) * (image.width() / 2.0 - j) + image.height() / 2.0)
             || (i > (s + t) * (image.width() / 2.0 - j) + image.height() / 2.0
             && i < (s - t) * (image.width() / 2.0 - j) + image.height() / 2.0))) {
-                mask(i, j, 0) = 255;
-                mask(i, j, 1) = 255;
-                mask(i, j, 2) = 255;
+                mask(j, i, 0) = 255;
+                mask(j, i, 1) = 255;
+                mask(j, i, 2) = 255;
             }
         }
     }
@@ -189,9 +189,43 @@ CImg<unsigned char> edgeMask(CImg<unsigned char> &image, int r, double s, double
                && i > (s - t) * (image.width() / 2.0 - j) + image.height() / 2.0)
                || (i > (s + t) * (image.width() / 2.0 - j) + image.height() / 2.0
                && i < (s - t) * (image.width() / 2.0 - j) + image.height() / 2.0))) {
-                    mask(i, j, 0) = 255;
-                    mask(i, j, 1) = 255;
-                    mask(i, j, 2) = 255;
+                    mask(j, i, 0) = 255;
+                    mask(j, i, 1) = 255;
+                    mask(j, i, 2) = 255;
+            }
+        }
+    }
+    mask(image.width() / 2, image.height() / 2, 0) = 255;
+    mask(image.width() / 2, image.height() / 2, 1) = 255;
+    mask(image.width() / 2, image.height() / 2, 2) = 255;
+    return mask;
+}
+
+CImg<unsigned char> edgeMaskB(CImg<unsigned char> &image, int r, double s, double t) {
+    CImg<unsigned char> mask(image.width(), image.height(), 1, 3, 0);
+    for(int i = 0; i<image.width() / 2; i++) {
+        for(int j = 0; j<image.height(); j++) {
+            if(pow(i - (image.height() / 2.0), 2) + pow(j - (image.width() / 2.0), 2) > pow(r, 2)
+               && ((i < (s + t) * (image.width() / 2.0 - j) + image.height() / 2.0
+                    && i > (s - t) * (image.width() / 2.0 - j) + image.height() / 2.0)
+                   || (i > (s + t) * (image.width() / 2.0 - j) + image.height() / 2.0
+                       && i < (s - t) * (image.width() / 2.0 - j) + image.height() / 2.0))) {
+                mask(i, j, 0) = 255;
+                mask(i, j, 1) = 255;
+                mask(i, j, 2) = 255;
+            }
+        }
+    }
+    for(int i = image.width() / 2; i<image.width(); i++) {
+        for(int j = 0; j<image.height(); j++) {
+            if(pow(i - (image.height() / 2.0), 2) + pow(j - (image.width() / 2.0), 2) > pow(r, 2)
+               && ((i < (s + t) * (image.width() / 2.0 - j) + image.height() / 2.0
+                    && i > (s - t) * (image.width() / 2.0 - j) + image.height() / 2.0)
+                   || (i > (s + t) * (image.width() / 2.0 - j) + image.height() / 2.0
+                       && i < (s - t) * (image.width() / 2.0 - j) + image.height() / 2.0))) {
+                mask(i, j, 0) = 255;
+                mask(i, j, 1) = 255;
+                mask(i, j, 2) = 255;
             }
         }
     }
@@ -207,12 +241,14 @@ CImg<unsigned char> edgeMask2(CImg<unsigned char> &image, int r, double angle, d
     int originY = image.width()/2;
     for(int i = 0; i<image.width(); i++) {
         for(int j = 0; j<image.height(); j++) {
-                if(i==originX) continue;
-            if(tan(angle) < (double)(j - originY)/ (double)(i - originX) && tan(angle+width) > (double)(j - originY)/ (double)(i - originX))
-            {
-                mask(i,j,0) = 255;
-                mask(i,j,1) = 255;
-                mask(i,j,2) = 255;
+            if(pow(i - (image.height() / 2), 2) + pow(j - (image.width() / 2), 2) > pow(r, 2)) {
+                if (i == originX) continue;
+                if (tan(angle) < (double) (j - originY) / (double) (i - originX) &&
+                    tan(angle + width) > (double) (j - originY) / (double) (i - originX)) {
+                    mask(i, j, 0) = 255;
+                    mask(i, j, 1) = 255;
+                    mask(i, j, 2) = 255;
+                }
             }
         }
     }

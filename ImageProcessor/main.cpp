@@ -338,8 +338,16 @@ int main(int argc, char *argv[])
         save = true;
     }
     if(edgehighpass_option->is_set()) {
-        //CImg<unsigned char> mask = edgeMask(inputImage, 20, tan(PI/4), tan(PI/16));
-        CImg<unsigned char> mask = edgeMask2(inputImage, 20, 0, PI/16);
+        // works for t in (-PI/2, PI/2)
+        double t = PI/2;
+        CImg<unsigned char> mask;
+        //CImg<unsigned char> mask = edgeMask2(inputImage, 20, 1, PI/16);
+        if (t >= -PI/4 && t <= PI/4) {
+            mask = edgeMaskA(inputImage, 20, tan(t), tan(PI / 16));
+        } else {
+            mask = edgeMaskB(inputImage, 20, tan(t - PI/2), tan(PI / 16));
+        }
+
         mask.save("mask.bmp");
         reposition(mask);
         applyMask(inputImage, mask);
