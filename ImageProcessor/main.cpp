@@ -348,6 +348,10 @@ int main(int argc, char *argv[])
             mask = edgeMaskB(inputImage, 20, tan(t - PI/2), tan(PI / 16));
         }
 
+        //CImg<unsigned char> mask = edgeMask(inputImage, 20, tan(PI/4), tan(PI/16));
+        double initial_angle = -PI/4;
+        double width = -PI/16;
+        CImg<unsigned char> mask = edgeMask2(inputImage, 20, -initial_angle, width);
         mask.save("mask.bmp");
         reposition(mask);
         applyMask(inputImage, mask);
