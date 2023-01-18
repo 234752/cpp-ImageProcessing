@@ -241,13 +241,16 @@ CImg<unsigned char> edgeMask2(CImg<unsigned char> &image, int r, double angle, d
     int originY = image.width()/2;
     for(int i = 0; i<image.width(); i++) {
         for(int j = 0; j<image.height(); j++) {
-                if(i==originX) continue;
-            if((tan(angle) > (double)(j - originY)/ (double)(i - originX) && tan(angle - width) < (double)(j - originY)/ (double)(i - originX))
-            || (tan(angle) < (double)(j - originY)/ (double)(i - originX) && tan(angle - width) > (double)(j - originY)/ (double)(i - originX)))
-            {
-                mask(i,j,0) = 255;
-                mask(i,j,1) = 255;
-                mask(i,j,2) = 255;
+            if(pow(i - (image.height() / 2), 2) + pow(j - (image.width() / 2), 2) > pow(r, 2)) {
+                if (i == originX) continue;
+                if ((tan(angle) > (double) (j - originY) / (double) (i - originX) &&
+                     tan(angle - width) < (double) (j - originY) / (double) (i - originX))
+                    || (tan(angle) < (double) (j - originY) / (double) (i - originX) &&
+                        tan(angle - width) > (double) (j - originY) / (double) (i - originX))) {
+                    mask(i, j, 0) = 255;
+                    mask(i, j, 1) = 255;
+                    mask(i, j, 2) = 255;
+                }
             }
         }
     }

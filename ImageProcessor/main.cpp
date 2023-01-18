@@ -341,17 +341,15 @@ int main(int argc, char *argv[])
         // works for t in (-PI/2, PI/2)
         double t = PI/2;
         CImg<unsigned char> mask;
-        //CImg<unsigned char> mask = edgeMask2(inputImage, 20, 1, PI/16);
         if (t >= -PI/4 && t <= PI/4) {
             mask = edgeMaskA(inputImage, 20, tan(t), tan(PI / 16));
         } else {
             mask = edgeMaskB(inputImage, 20, tan(t - PI/2), tan(PI / 16));
         }
 
-        //CImg<unsigned char> mask = edgeMask(inputImage, 20, tan(PI/4), tan(PI/16));
-        double initial_angle = -PI/4;
-        double width = -PI/16;
-        CImg<unsigned char> mask = edgeMask2(inputImage, 20, -initial_angle, width);
+//        double initial_angle = -PI/4;
+//        double width = -PI/16;
+//        CImg<unsigned char> mask = edgeMask2(inputImage, 20, -initial_angle, width);
         mask.save("mask.bmp");
         reposition(mask);
         applyMask(inputImage, mask);
