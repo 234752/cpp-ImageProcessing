@@ -114,7 +114,18 @@ CImg<unsigned char> lowPassMask(CImg<unsigned char> &image, int r) {
             }
         }
     }
-    return mask;
+    mask.save("mask.bmp");
+    reposition(mask);
+
+    vector<vector<complex<double>>> output = imageToMatrix(image);
+    matrixFFT(output, -1);
+    for(int i = 0; i<image.height(); i++) {
+        for(int j = 0; j<image.width(); j++) {
+            output[i][j] = output[i][j].operator*=( mask(i, j, 0)).operator/=(255);
+        }
+    }
+    matrixFFT(output, 1);
+    return matrixToImage(output);
 }
 
 CImg<unsigned char> highPassMask(CImg<unsigned char> &image, int r) {
@@ -131,7 +142,18 @@ CImg<unsigned char> highPassMask(CImg<unsigned char> &image, int r) {
     mask(image.width() / 2, image.height() / 2, 0) = 255;
     mask(image.width() / 2, image.height() / 2, 1) = 255;
     mask(image.width() / 2, image.height() / 2, 2) = 255;
-    return mask;
+    mask.save("mask.bmp");
+    reposition(mask);
+
+    vector<vector<complex<double>>> output = imageToMatrix(image);
+    matrixFFT(output, -1);
+    for(int i = 0; i<image.height(); i++) {
+        for(int j = 0; j<image.width(); j++) {
+            output[i][j] = output[i][j].operator*=( mask(i, j, 0)).operator/=(255);
+        }
+    }
+    matrixFFT(output, 1);
+    return matrixToImage(output);
 }
 
 CImg<unsigned char> bandPassMask(CImg<unsigned char> &image, int r1, int r2) {
@@ -149,7 +171,18 @@ CImg<unsigned char> bandPassMask(CImg<unsigned char> &image, int r1, int r2) {
     mask(image.width() / 2, image.height() / 2, 0) = 255;
     mask(image.width() / 2, image.height() / 2, 1) = 255;
     mask(image.width() / 2, image.height() / 2, 2) = 255;
-    return mask;
+    mask.save("mask.bmp");
+    reposition(mask);
+
+    vector<vector<complex<double>>> output = imageToMatrix(image);
+    matrixFFT(output, -1);
+    for(int i = 0; i<image.height(); i++) {
+        for(int j = 0; j<image.width(); j++) {
+            output[i][j] = output[i][j].operator*=( mask(i, j, 0)).operator/=(255);
+        }
+    }
+    matrixFFT(output, 1);
+    return matrixToImage(output);
 }
 
 CImg<unsigned char> bandCutMask(CImg<unsigned char> &image, int r1, int r2) {
@@ -164,7 +197,18 @@ CImg<unsigned char> bandCutMask(CImg<unsigned char> &image, int r1, int r2) {
             }
         }
     }
-    return mask;
+    mask.save("mask.bmp");
+    reposition(mask);
+
+    vector<vector<complex<double>>> output = imageToMatrix(image);
+    matrixFFT(output, -1);
+    for(int i = 0; i<image.height(); i++) {
+        for(int j = 0; j<image.width(); j++) {
+            output[i][j] = output[i][j].operator*=( mask(i, j, 0)).operator/=(255);
+        }
+    }
+    matrixFFT(output, 1);
+    return matrixToImage(output);
 }
 
 CImg<unsigned char> edgeMaskA(CImg<unsigned char> &image, int r, double s, double t) {
@@ -258,7 +302,55 @@ CImg<unsigned char> edgeMask2(CImg<unsigned char> &image, int r, double angle, d
     mask(image.width() / 2, image.height() / 2, 0) = 255;
     mask(image.width() / 2, image.height() / 2, 1) = 255;
     mask(image.width() / 2, image.height() / 2, 2) = 255;
-    return mask;
+    mask.save("mask.bmp");
+    reposition(mask);
+
+    vector<vector<complex<double>>> output = imageToMatrix(image);
+    matrixFFT(output, -1);
+    for(int i = 0; i<image.height(); i++) {
+        for(int j = 0; j<image.width(); j++) {
+            output[i][j] = output[i][j].operator*=( mask(i, j, 0)).operator/=(255);
+        }
+    }
+    matrixFFT(output, 1);
+    return matrixToImage(output);
+}
+
+CImg<unsigned char> edgeMask7(CImg<unsigned char> &image, int r, double angle, double width) {
+    CImg<unsigned char> mask(image.width(), image.height(), 1, 3, 0);
+    int originX = image.width()/2;
+    int originY = image.width()/2;
+    for(int i = 0; i<image.width(); i++) {
+        for(int j = 0; j<image.height(); j++) {
+            if(pow(i - (image.height() / 2), 2) + pow(j - (image.width() / 2), 2) > pow(r, 2)) {
+                if (i == originX) continue;
+                if ((tan(angle) > (double) (j - originY) / (double) (i - originX) &&
+                     tan(angle - width) < (double) (j - originY) / (double) (i - originX))
+                    || (tan(angle) < (double) (j - originY) / (double) (i - originX) &&
+                        tan(angle - width) > (double) (j - originY) / (double) (i - originX))) {
+                    mask(j, i, 0) = 255;
+                    mask(j, i, 1) = 255;
+                    mask(j, i, 2) = 255;
+                }
+            }
+        }
+    }
+
+    mask(image.width() / 2, image.height() / 2, 0) = 255;
+    mask(image.width() / 2, image.height() / 2, 1) = 255;
+    mask(image.width() / 2, image.height() / 2, 2) = 255;
+    mask.save("mask.bmp");
+    reposition(mask);
+
+    vector<vector<complex<double>>> output = imageToMatrix(image);
+    matrixFFT(output, -1);
+    for(int i = 0; i<image.height(); i++) {
+        for(int j = 0; j<image.width(); j++) {
+            output[i][j] = output[i][j].operator*=( mask(i, j, 0)).operator/=(255);
+        }
+    }
+    matrixFFT(output, 1);
+    return matrixToImage(output);
 }
 
 void modifyPhase(CImg<unsigned char> &image, int l, int k) {

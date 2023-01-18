@@ -13,7 +13,6 @@
 #include "task3/Task3M.cpp"
 #include "task4/Task4F.cpp"
 
-
 using namespace popl;
 using namespace std;
 
@@ -304,15 +303,11 @@ int main(int argc, char *argv[])
 
     //F options execution
     if(lowpass_option->is_set()) {
-        CImg<unsigned char> mask = lowPassMask(inputImage, lowpass_option->value());
-        reposition(mask);
-        applyMask(inputImage, mask);
+        inputImage = lowPassMask(inputImage, lowpass_option->value());
         save = true;
     }
     if(highpass_option->is_set()) {
-        CImg<unsigned char> mask = highPassMask(inputImage, highpass_option->value());
-        reposition(mask);
-        applyMask(inputImage, mask);
+        inputImage = highPassMask(inputImage, highpass_option->value());
         save = true;
     }
     if(bandpass_option->is_set()) {
@@ -321,9 +316,7 @@ int main(int argc, char *argv[])
         cin >> r1;
         cout << "r2 = ";
         cin >> r2;
-        CImg<unsigned char> mask = bandPassMask(inputImage, r1, r2);
-        reposition(mask);
-        applyMask(inputImage, mask);
+        inputImage = bandPassMask(inputImage, r1, r2);
         save = true;
     }
     if(bandcut_option->is_set()) {
@@ -332,27 +325,32 @@ int main(int argc, char *argv[])
         cin >> r1;
         cout << "r2 = ";
         cin >> r2;
-        CImg<unsigned char> mask = bandCutMask(inputImage, r1, r2);
-        reposition(mask);
-        applyMask(inputImage, mask);
+        inputImage = bandCutMask(inputImage, r1, r2);
         save = true;
     }
     if(edgehighpass_option->is_set()) {
-        // works for t in (-PI/2, PI/2)
-        double t = PI/2;
-        CImg<unsigned char> mask;
-        if (t >= -PI/4 && t <= PI/4) {
-            mask = edgeMaskA(inputImage, 20, tan(t), tan(PI / 16));
+        int radius;
+        double angle, width;
+        cout << "Provide angle and width as an angle in degrees\n";
+        cout << "radius = ";
+        cin >> radius;
+        cout << "angle = ";
+        cin >> angle;
+        cout << "width = ";
+        cin >> width;
+        if(angle + width >= -90 && angle + width <= 90) {
+            angle = PI * angle / 180.0;
+            width = PI * width / 180.0;
+            inputImage = edgeMask2(inputImage, 20, -angle, width);
+        } else if(angle + width < -90) {
+            angle = PI * (angle + 90) / 180.0;
+            width = PI * width / 180.0;
+            inputImage = edgeMask7(inputImage, 20, -angle, width);
         } else {
-            mask = edgeMaskB(inputImage, 20, tan(t - PI/2), tan(PI / 16));
+            angle = PI * (angle - 90) / 180.0;
+            width = PI * width / 180.0;
+            inputImage = edgeMask7(inputImage, 20, -angle, width);
         }
-
-//        double initial_angle = -PI/4;
-//        double width = -PI/16;
-//        CImg<unsigned char> mask = edgeMask2(inputImage, 20, -initial_angle, width);
-        mask.save("mask.bmp");
-        reposition(mask);
-        applyMask(inputImage, mask);
         save = true;
     }
     if(phase_option->is_set()) {
