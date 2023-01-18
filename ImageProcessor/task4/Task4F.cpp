@@ -201,6 +201,28 @@ CImg<unsigned char> edgeMask(CImg<unsigned char> &image, int r, double s, double
     return mask;
 }
 
+CImg<unsigned char> edgeMask2(CImg<unsigned char> &image, int r, double angle, double width) {
+    CImg<unsigned char> mask(image.width(), image.height(), 1, 3, 0);
+    int originX = image.width()/2;
+    int originY = image.width()/2;
+    for(int i = 0; i<image.width(); i++) {
+        for(int j = 0; j<image.height(); j++) {
+                if(i==originX) continue;
+            if(tan(angle) < (double)(j - originY)/ (double)(i - originX) && tan(angle+width) > (double)(j - originY)/ (double)(i - originX))
+            {
+                mask(i,j,0) = 255;
+                mask(i,j,1) = 255;
+                mask(i,j,2) = 255;
+            }
+        }
+    }
+
+    mask(image.width() / 2, image.height() / 2, 0) = 255;
+    mask(image.width() / 2, image.height() / 2, 1) = 255;
+    mask(image.width() / 2, image.height() / 2, 2) = 255;
+    return mask;
+}
+
 void modifyPhase(CImg<unsigned char> &image, int l, int k) {
     vector<vector<complex<double>>> output = imageToMatrix(image);
     matrixFFT(output, -1);
