@@ -167,6 +167,40 @@ CImg<unsigned char> bandCutMask(CImg<unsigned char> &image, int r1, int r2) {
     return mask;
 }
 
+CImg<unsigned char> edgeMask(CImg<unsigned char> &image, int r, double s, double t) {
+    CImg<unsigned char> mask(image.width(), image.height(), 1, 3, 0);
+    for(int i = 0; i<image.width() / 2; i++) {
+        for(int j = 0; j<image.height(); j++) {
+            if(pow(i - (image.height() / 2.0), 2) + pow(j - (image.width() / 2.0), 2) > pow(r, 2)
+            && ((i < (s + t) * (image.width() / 2.0 - j) + image.height() / 2.0
+            && i > (s - t) * (image.width() / 2.0 - j) + image.height() / 2.0)
+            || (i > (s + t) * (image.width() / 2.0 - j) + image.height() / 2.0
+            && i < (s - t) * (image.width() / 2.0 - j) + image.height() / 2.0))) {
+                mask(i, j, 0) = 255;
+                mask(i, j, 1) = 255;
+                mask(i, j, 2) = 255;
+            }
+        }
+    }
+    for(int i = image.width() / 2; i<image.width(); i++) {
+        for(int j = 0; j<image.height(); j++) {
+            if(pow(i - (image.height() / 2.0), 2) + pow(j - (image.width() / 2.0), 2) > pow(r, 2)
+               && ((i < (s + t) * (image.width() / 2.0 - j) + image.height() / 2.0
+               && i > (s - t) * (image.width() / 2.0 - j) + image.height() / 2.0)
+               || (i > (s + t) * (image.width() / 2.0 - j) + image.height() / 2.0
+               && i < (s - t) * (image.width() / 2.0 - j) + image.height() / 2.0))) {
+                    mask(i, j, 0) = 255;
+                    mask(i, j, 1) = 255;
+                    mask(i, j, 2) = 255;
+            }
+        }
+    }
+    mask(image.width() / 2, image.height() / 2, 0) = 255;
+    mask(image.width() / 2, image.height() / 2, 1) = 255;
+    mask(image.width() / 2, image.height() / 2, 2) = 255;
+    return mask;
+}
+
 void modifyPhase(CImg<unsigned char> &image, int l, int k) {
     vector<vector<complex<double>>> output = imageToMatrix(image);
     matrixFFT(output, -1);
