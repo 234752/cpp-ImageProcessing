@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
     auto fft_option = op.add<Switch>("", "fft", "fast Fourier transform (spatial domain)");
 
     //F options
-    auto lowpass_option = op.add<Switch>("", "lowpass", "low-pass filter, (high-cut filter)");
+    auto lowpass_option = op.add<Value<int>>("", "lowpass", "low-pass filter, (high-cut filter)");
     auto highpass_option = op.add<Switch>("", "highpass", "high-pass filter, (low-cut filter)");
     auto bandpass_option = op.add<Switch>("", "bandpass", "band-pass filter");
     auto bandcut_option = op.add<Switch>("", "bandcut", "band-cut filter");
@@ -304,7 +304,7 @@ int main(int argc, char *argv[])
 
     //F options execution
     if(lowpass_option->is_set()) {
-        CImg<unsigned char> mask = CImg(R"(..\..\img\masks\f1a.bmp)");
+        CImg<unsigned char> mask = lowPassMask(inputImage, lowpass_option->value());
         reposition(mask);
         applyMask(inputImage, mask);
         save = true;

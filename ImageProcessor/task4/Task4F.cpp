@@ -103,6 +103,20 @@ void applyMask(CImg<unsigned char> &image, CImg<unsigned char> &mask) {
     image = matrixToImage(output);
 }
 
+CImg<unsigned char> lowPassMask(CImg<unsigned char> &image, int r) {
+    CImg<unsigned char> mask(image.width(), image.height(), 1, 3, 0);
+    for(int i = 0; i<image.height(); i++) {
+        for(int j = 0; j<image.width(); j++) {
+            if(pow(i - image.height() / 2, 2) + pow(j - image.width() / 2, 2) <= pow(r, 2)) {
+                mask(i, j, 0) = 255;
+                mask(i, j, 1) = 255;
+                mask(i, j, 2) = 255;
+            }
+        }
+    }
+    return mask;
+}
+
 void modifyPhase(CImg<unsigned char> &image, int l, int k) {
     vector<vector<complex<double>>> output = imageToMatrix(image);
     matrixFFT(output, -1);
