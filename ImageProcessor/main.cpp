@@ -338,11 +338,11 @@ int main(int argc, char *argv[])
         cin >> angle;
         cout << "width = ";
         cin >> width;
-        if(angle + width >= -90 && angle + width <= 90) {
+        if(angle + width >= -90 && angle + width <= 90 && angle >= -90 && angle <= 90) {
             angle = PI * angle / 180.0;
             width = PI * width / 180.0;
             inputImage = edgeMask2(inputImage, 20, -angle, width);
-        } else if(angle + width < -90) {
+        } else if(angle + width < -90 || angle < -90) {
             angle = PI * (angle + 90) / 180.0;
             width = PI * width / 180.0;
             inputImage = edgeMask7(inputImage, 20, -angle, width);
