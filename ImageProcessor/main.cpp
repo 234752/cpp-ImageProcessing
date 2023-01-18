@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 
     //F options
     auto lowpass_option = op.add<Value<int>>("", "lowpass", "low-pass filter, (high-cut filter)");
-    auto highpass_option = op.add<Switch>("", "highpass", "high-pass filter, (low-cut filter)");
+    auto highpass_option = op.add<Value<int>>("", "highpass", "high-pass filter, (low-cut filter)");
     auto bandpass_option = op.add<Switch>("", "bandpass", "band-pass filter");
     auto bandcut_option = op.add<Switch>("", "bandcut", "band-cut filter");
     auto edgehighpass_option = op.add<Value<int>>("", "edgehighpass", "high-pass filter with edge detection");
@@ -310,19 +310,29 @@ int main(int argc, char *argv[])
         save = true;
     }
     if(highpass_option->is_set()) {
-        CImg<unsigned char> mask = CImg(R"(..\..\img\masks\f2a.bmp)");
+        CImg<unsigned char> mask = highPassMask(inputImage, highpass_option->value());
         reposition(mask);
         applyMask(inputImage, mask);
         save = true;
     }
     if(bandpass_option->is_set()) {
-        CImg<unsigned char> mask = CImg(R"(..\..\img\masks\f3a.bmp)");
+        int r1, r2;
+        cout << "r1 = ";
+        cin >> r1;
+        cout << "r2 = ";
+        cin >> r2;
+        CImg<unsigned char> mask = bandPassMask(inputImage, r1, r2);
         reposition(mask);
         applyMask(inputImage, mask);
         save = true;
     }
     if(bandcut_option->is_set()) {
-        CImg<unsigned char> mask = CImg(R"(..\..\img\masks\f4a.bmp)");
+        int r1, r2;
+        cout << "r1 = ";
+        cin >> r1;
+        cout << "r2 = ";
+        cin >> r2;
+        CImg<unsigned char> mask = bandCutMask(inputImage, r1, r2);
         reposition(mask);
         applyMask(inputImage, mask);
         save = true;

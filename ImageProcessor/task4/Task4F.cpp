@@ -117,6 +117,56 @@ CImg<unsigned char> lowPassMask(CImg<unsigned char> &image, int r) {
     return mask;
 }
 
+CImg<unsigned char> highPassMask(CImg<unsigned char> &image, int r) {
+    CImg<unsigned char> mask(image.width(), image.height(), 1, 3, 0);
+    for(int i = 0; i<image.height(); i++) {
+        for(int j = 0; j<image.width(); j++) {
+            if(pow(i - (image.height() / 2), 2) + pow(j - (image.width() / 2), 2) > pow(r, 2)) {
+                mask(i, j, 0) = 255;
+                mask(i, j, 1) = 255;
+                mask(i, j, 2) = 255;
+            }
+        }
+    }
+    mask(image.width() / 2, image.height() / 2, 0) = 255;
+    mask(image.width() / 2, image.height() / 2, 1) = 255;
+    mask(image.width() / 2, image.height() / 2, 2) = 255;
+    return mask;
+}
+
+CImg<unsigned char> bandPassMask(CImg<unsigned char> &image, int r1, int r2) {
+    CImg<unsigned char> mask(image.width(), image.height(), 1, 3, 0);
+    for(int i = 0; i<image.height(); i++) {
+        for(int j = 0; j<image.width(); j++) {
+            if(pow(i - image.height() / 2, 2) + pow(j - image.width() / 2, 2) <= pow(r1, 2)
+            && pow(i - image.height() / 2, 2) + pow(j - image.width() / 2, 2) > pow(r2, 2)) {
+                mask(i, j, 0) = 255;
+                mask(i, j, 1) = 255;
+                mask(i, j, 2) = 255;
+            }
+        }
+    }
+    mask(image.width() / 2, image.height() / 2, 0) = 255;
+    mask(image.width() / 2, image.height() / 2, 1) = 255;
+    mask(image.width() / 2, image.height() / 2, 2) = 255;
+    return mask;
+}
+
+CImg<unsigned char> bandCutMask(CImg<unsigned char> &image, int r1, int r2) {
+    CImg<unsigned char> mask(image.width(), image.height(), 1, 3, 0);
+    for(int i = 0; i<image.height(); i++) {
+        for(int j = 0; j<image.width(); j++) {
+            if(pow(i - image.height() / 2, 2) + pow(j - image.width() / 2, 2) > pow(r1, 2)
+               || pow(i - image.height() / 2, 2) + pow(j - image.width() / 2, 2) <= pow(r2, 2)) {
+                mask(i, j, 0) = 255;
+                mask(i, j, 1) = 255;
+                mask(i, j, 2) = 255;
+            }
+        }
+    }
+    return mask;
+}
+
 void modifyPhase(CImg<unsigned char> &image, int l, int k) {
     vector<vector<complex<double>>> output = imageToMatrix(image);
     matrixFFT(output, -1);
